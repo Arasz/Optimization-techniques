@@ -1,11 +1,10 @@
-using ConsoleApplication.Common;
 using System.Collections.Generic;
 
 namespace ConsoleApplication.Solver
 {
     public interface ISolver
     {
-        IEnumerable<Point> BestPath { get; }
+        IEnumerable<int> BestPath { get; }
 
         int BestResult { get; }
 

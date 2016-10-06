@@ -1,6 +1,5 @@
 ﻿using ConsoleApplication.Algorithms;
-using ConsoleApplication.Common;
-using ConsoleApplication.Data;
+using ConsoleApplication.Graphs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,9 @@ namespace ConsoleApplication.Solver
 {
     public class TspSolver : ISolver
     {
-        private readonly IData _data;
+        private readonly Graph _graph;
 
-        public IEnumerable<Point> BestPath { get; private set; }
+        public IEnumerable<int> BestPath { get; private set; }
 
         public int BestResult { get; private set; }
 
@@ -23,29 +22,28 @@ namespace ConsoleApplication.Solver
 
         public int WorstResult { get; private set; }
 
-        public TspSolver(IAlgorithm tspSolvingAlgorithm, IData data)
+        public TspSolver(IAlgorithm tspSolvingAlgorithm, Graph graph)
         {
-            _data = data;
+            _graph = graph;
             TspSolvingAlgorithm = tspSolvingAlgorithm;
         }
 
         public void Solve()
         {
-            var cityPositions = _data.Positions;
-
             BestResult = int.MaxValue;
             WorstResult = int.MinValue;
 
-            foreach (var cityPosition in cityPositions)
+            for (var startNode = 0; startNode < _graph.NodesCount; startNode++)
             {
-                IEnumerable<Point> path;
-                var localResult = TspSolvingAlgorithm.Solve(cityPosition, _data, out path);
+                IList<int> path;
+                //TODO: pass steps in ctr
+                var localResult = TspSolvingAlgorithm.Solve(startNode, _graph, 50, out path);
 
                 UpdateResults(localResult, path);
             }
         }
 
-        private void UpdateResults(int localResult, IEnumerable<Point> path)
+        private void UpdateResults(int localResult, IEnumerable<int> path)
         {
             if (localResult < BestResult)
             {
@@ -57,7 +55,7 @@ namespace ConsoleApplication.Solver
                 WorstResult = localResult;
 
             Results.Add(localResult);
-            MeanReasult = (int)Math.Floor(Results.Average());
+            MeanReasult = (int)Math.Round(Results.Average());
         }
     }
 }

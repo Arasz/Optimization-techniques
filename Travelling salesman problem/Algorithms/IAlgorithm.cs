@@ -1,5 +1,4 @@
-using ConsoleApplication.Common;
-using ConsoleApplication.Data;
+using ConsoleApplication.Graphs;
 using System.Collections.Generic;
 
 namespace ConsoleApplication.Algorithms
@@ -12,10 +11,10 @@ namespace ConsoleApplication.Algorithms
         /// <summary>
         /// Solves TSP 
         /// </summary>
-        /// <param name="startPoint"> Algorithm start point </param>
-        /// <param name="data"> Algorithm input data </param>
+        /// <param name="startNode"> Algorithm start point </param>
+        /// <param name="graph"> Algorithm input data </param>
         /// <param name="path"> Path found by algorithm </param>
         /// <returns> Total path length </returns>
-        int Solve(Point startPoint, IData data, out IEnumerable<Point> path);
+        int Solve(int startNode, Graph graph, int steps, out IList<int> path);
     }
 }
