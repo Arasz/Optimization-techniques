@@ -1,7 +1,10 @@
 ﻿using ConsoleApplication.Algorithms;
+using ConsoleApplication.Configuration;
 using ConsoleApplication.Graphs;
 using ConsoleApplication.Solver;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ConsoleApplication
@@ -10,8 +13,10 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
+            var dataPath = BuildConfiguration()[$"{nameof(AppConfiguration)}:{nameof(AppConfiguration.GraphDataPath)}"];
+
             Console.WriteLine("Hello World!");
-            var dataLoader = new GraphLoader(@"D:\Library\Documents\GitHub\Optimization techniques\Travelling salesman problem\kroA100.xml", 100);
+            var dataLoader = new GraphLoader(dataPath, 100);
             var graph = dataLoader.Load();
             var solver = new TspSolver(new NearestNeighbourAlgorithm(), graph);
             solver.Solve();
@@ -20,5 +25,10 @@ namespace ConsoleApplication
             Console.WriteLine();
             Console.ReadKey();
         }
+
+        private static IConfigurationRoot BuildConfiguration() => new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("config.json")
+            .Build();
     }
 }
