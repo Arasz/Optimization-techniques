@@ -17,6 +17,8 @@ namespace ConsoleApplication.Graphs
             RecreateEdges();
         }
 
+        public int EdgeWeight(int targetNode) => _completeGraph.NodeEdgesWeights(CurrentNode)[targetNode];
+
         public void MoveAlongEdge(Edge edge)
         {
             CurrentNode = edge.TargetNode;

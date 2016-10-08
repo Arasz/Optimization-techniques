@@ -38,17 +38,10 @@ namespace ConsoleApplication.Algorithms
                 path.Add(iterator.CurrentNode);
             }
 
-            MoveToStart(startNode, path, iterator, ref pathCost);
+            pathCost += iterator.EdgeWeight(startNode);
+            path.Add(startNode);
 
             return pathCost;
-        }
-
-        private static void MoveToStart(int startNode, IList<int> path, IGraphIterator iterator, ref int pathCost)
-        {
-            var edgeToStart = iterator.Edges.First(edge => edge.TargetNode == startNode);
-            //pathCost += completeGraph.NodeEdgesWeights(iterator.CurrentNode)[startNode]; // Access directly from matrix
-            pathCost += edgeToStart.Weight;
-            path.Add(edgeToStart.TargetNode);
         }
 
         private Edge NearestNodeEdge(IEnumerable<Edge> edges, IEnumerable<int> unvisitedNodes) => edges
