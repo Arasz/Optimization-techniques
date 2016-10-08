@@ -24,7 +24,7 @@ namespace ConsoleApplication
 
             SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps), "GREEDY CYCLE");
 
-            SolveAndPrint(solver, new NearestNeighbourGraspAlgorithm(Steps, 5), nameof(NearestNeighbourGraspAlgorithm));
+            SolveAndPrint(solver, new NearestNeighbourGraspAlgorithm(Steps, 3), nameof(NearestNeighbourGraspAlgorithm));
 
             Console.ReadKey();
         }
