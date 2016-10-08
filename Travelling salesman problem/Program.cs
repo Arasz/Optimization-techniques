@@ -36,7 +36,7 @@ namespace ConsoleApplication
 
             SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)), "GREEDY CYCLE GRASP", resultPrinter);
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         private static IConfigurationRoot BuildConfiguration() => new ConfigurationBuilder()
