@@ -204,3 +204,6 @@ __pycache__/
 
 #Mac OSX 
 .DS_Store
+
+#Config file
+config.json
