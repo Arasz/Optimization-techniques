@@ -29,16 +29,18 @@ namespace ConsoleApplication.Algorithms
 
             //find nearest to start point
             var nearestNodeEdge = NearestNodeEdge(iterator.Edges, unvisitedNodes);
-
             pathCost += nearestNodeEdge.Weight;
 
             iterator.MoveAlongEdge(nearestNodeEdge);
             unvisitedNodes.Remove(iterator.CurrentNode);
             path.Add(iterator.CurrentNode);
+            iterator.MoveTo(path.Last());
+            path.Add(startNode);
+            pathCost += iterator.EdgeWeight(startNode);
 
             steps--;
 
-            while (steps-- != 0)
+            while (--steps > 0)
             {
                 Result bestResult = new Result();
                 for (var node = 0; node < (path.Count - 2); node++)
@@ -60,9 +62,6 @@ namespace ConsoleApplication.Algorithms
 
                 unvisitedNodes.Remove(bestResult.BestNode);
             }
-            iterator.MoveTo(path.Last());
-            path.Add(startNode);
-            pathCost += iterator.EdgeWeight(startNode);
             return pathCost;
         }
 
