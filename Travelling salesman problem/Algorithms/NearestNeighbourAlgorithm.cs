@@ -46,6 +46,7 @@ namespace ConsoleApplication.Algorithms
         private static void MoveToStart(int startNode, IList<int> path, IGraphIterator iterator, ref int pathCost)
         {
             var edgeToStart = iterator.Edges.First(edge => edge.TargetNode == startNode);
+            //pathCost += completeGraph.NodeEdgesWeights(iterator.CurrentNode)[startNode]; // Access directly from matrix
             pathCost += edgeToStart.Weight;
             path.Add(edgeToStart.TargetNode);
         }
