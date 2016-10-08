@@ -21,15 +21,18 @@ namespace ConsoleApplication
             var dataLoader = new GraphLoader(dataPath, 100);
             var graph = dataLoader.Load();
             var solver = new TspSolver(graph);
+
             var resultPrinter = new ResultPrinter()
                 .AddPrinter(new ConsolePrinter())
                 .AddPrinter(new FilePrinter($"{DateTime.Now.Date.ToFileTime()}_results.txt"));
 
-            SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps), "NEAREST NEIGHBOR", resultPrinter, BuildContent);
+            SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder()), "NEAREST NEIGHBOR", resultPrinter, BuildContent);
 
-            SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps), "GREEDY CYCLE", resultPrinter, BuildContent);
+            SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, new EdgeFinder()), "GREEDY CYCLE", resultPrinter, BuildContent);
 
-            SolveAndPrint(solver, new NearestNeighbourGraspAlgorithm(Steps, 3), nameof(NearestNeighbourGraspAlgorithm), resultPrinter, BuildContent);
+            SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)), "NEAREST NEIGHBOR GRASP", resultPrinter, BuildContent);
+
+            SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)), "GREEDY CYCLE GRASP", resultPrinter, BuildContent);
 
             Console.ReadKey();
         }
