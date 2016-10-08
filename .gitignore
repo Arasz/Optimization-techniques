@@ -212,3 +212,6 @@ __pycache__/
 *.aux
 *.log
 *.gz
+
+#Results
+**/*_result.txt
