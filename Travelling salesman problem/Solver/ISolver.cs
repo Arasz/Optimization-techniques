@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ConsoleApplication.Algorithms;
 
 namespace ConsoleApplication.Solver
 {
@@ -12,6 +13,6 @@ namespace ConsoleApplication.Solver
 
         int WorstResult { get; }
 
-        void Solve();
+        void Solve(IAlgorithm tspSolvingAlgorithm);
     }
 }

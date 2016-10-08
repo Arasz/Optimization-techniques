@@ -18,17 +18,14 @@ namespace ConsoleApplication.Solver
 
         public IList<int> Results { get; } = new List<int>();
 
-        public IAlgorithm TspSolvingAlgorithm { get; set; }
-
         public int WorstResult { get; private set; }
 
-        public TspSolver(IAlgorithm tspSolvingAlgorithm, Graph graph)
+        public TspSolver(Graph graph)
         {
             _graph = graph;
-            TspSolvingAlgorithm = tspSolvingAlgorithm;
         }
 
-        public void Solve()
+        public void Solve(IAlgorithm tspSolvingAlgorithm)
         {
             BestResult = int.MaxValue;
             WorstResult = int.MinValue;
@@ -37,7 +34,7 @@ namespace ConsoleApplication.Solver
             {
                 IList<int> path;
                 //TODO: pass steps in ctr
-                var localResult = TspSolvingAlgorithm.Solve(startNode, _graph, 50, out path);
+                var localResult = tspSolvingAlgorithm.Solve(startNode, _graph, out path);
 
                 UpdateResults(localResult, path);
             }

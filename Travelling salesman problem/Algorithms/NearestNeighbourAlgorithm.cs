@@ -6,7 +6,12 @@ namespace ConsoleApplication.Algorithms
 {
     public class NearestNeighbourAlgorithm : IAlgorithm
     {
-        public int Solve(int startNode, Graph graph, int steps, out IList<int> path)
+        private int _steps {get;}
+
+        public NearestNeighbourAlgorithm(int steps){
+            _steps = steps;
+        }
+        public int Solve(int startNode, Graph graph, out IList<int> path)
         {
             graph.CurrentNode = startNode;
             path = new List<int>();
@@ -14,6 +19,7 @@ namespace ConsoleApplication.Algorithms
 
             path.Add(startNode);
             var unvisitedNodes = graph.Nodes.Where(node => node != startNode).ToList();
+            var steps = _steps;
 
             while (--steps > 0)
             {
