@@ -6,11 +6,8 @@ namespace ConsoleApplication.Algorithms
 {
     public class GreedyCycleAlgorithm : AlgorithmBase
     {
-        private int _steps { get; }
-
-        public GreedyCycleAlgorithm(int steps)
+        public GreedyCycleAlgorithm(int steps) : base(steps)
         {
-            _steps = steps;
         }
 
         public override int Solve(int startNode, IGraph completeGraph, out IList<int> path)

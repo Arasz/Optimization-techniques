@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace ConsoleApplication.Algorithms
 {
-    public class NearestNeighborAlgorithm : AlgorithmBase
+    public class NearestNeighbourGraspAlgorithm : GraspAlgorithm
     {
-        public NearestNeighborAlgorithm(int steps) : base(steps)
+        public NearestNeighbourGraspAlgorithm(int steps, int restrictedCandidateListSize) : base(steps, restrictedCandidateListSize)
         {
         }
 
