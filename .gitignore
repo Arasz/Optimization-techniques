@@ -206,4 +206,4 @@ __pycache__/
 .DS_Store
 
 #Config file
-*/config.json
+**/config.json
