@@ -1,12 +1,14 @@
-﻿namespace ConsoleApplication.Printer
+﻿using ConsoleApplication.Printer.ContentBuilders;
+
+namespace ConsoleApplication.Printer
 {
     public interface IResultPrinter
     {
-        IResultPrinter AddPrinter(IPrinter printer);
+        IResultPrinter AddPrinter(IPrinter printer, IContentBuilder contentBuilder);
 
         /// <summary>
         /// Prints result with supplied printers 
         /// </summary>
-        void Print(string content);
+        void Print(string title);
     }
 }
