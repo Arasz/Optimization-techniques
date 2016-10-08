@@ -6,8 +6,11 @@ namespace ConsoleApplication.Algorithms
 {
     public class GreedyCycleAlgorithm : AlgorithmBase
     {
-        public GreedyCycleAlgorithm(int steps) : base(steps)
+
+        private IEdgeFinder _edgeFinder;
+        public GreedyCycleAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps)
         {
+            _edgeFinder = edgeFinder;
         }
 
         public override int Solve(int startNode, IGraph completeGraph, out IList<int> path)
@@ -25,7 +28,7 @@ namespace ConsoleApplication.Algorithms
             var steps = _steps;
 
             //find nearest to start point
-            var nearestNodeEdge = NearestNodeEdge(iterator.Edges, unvisitedNodes);
+            var nearestNodeEdge = _edgeFinder.NearestNodeEdge(iterator.Edges, unvisitedNodes);
             pathCost += nearestNodeEdge.Weight;
 
             iterator.MoveAlongEdge(nearestNodeEdge);

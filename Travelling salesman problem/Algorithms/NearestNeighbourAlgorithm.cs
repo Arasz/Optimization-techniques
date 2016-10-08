@@ -6,8 +6,10 @@ namespace ConsoleApplication.Algorithms
 {
     public class NearestNeighborAlgorithm : AlgorithmBase
     {
-        public NearestNeighborAlgorithm(int steps) : base(steps)
+        private IEdgeFinder _edgeFinder;
+        public NearestNeighborAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps)
         {
+            _edgeFinder = edgeFinder;
         }
 
         public override int Solve(int startNode, IGraph completeGraph, out IList<int> path)
@@ -24,7 +26,7 @@ namespace ConsoleApplication.Algorithms
 
             while (--steps > 0)
             {
-                var edgeToNearestNode = NearestNodeEdge(iterator.Edges, unvisitedNodes);
+                var edgeToNearestNode = _edgeFinder.NearestNodeEdge(iterator.Edges, unvisitedNodes);
 
                 pathCost += edgeToNearestNode.Weight;
 
