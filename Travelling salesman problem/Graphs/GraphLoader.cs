@@ -20,7 +20,7 @@ namespace ConsoleApplication.Graphs
         public Graph Load()
         {
             if (!File.Exists(_dataPath))
-                return null;
+                throw new FileNotFoundException();
 
             var graphMatrix = InitializeMatrix();
 
@@ -43,7 +43,7 @@ namespace ConsoleApplication.Graphs
                 }
             }
 
-            return new Graph(graphMatrix, 0, graphMatrix.Length);
+            return new Graph(graphMatrix, 0, graphMatrix.Length-1);
         }
 
         private int[][] InitializeMatrix()

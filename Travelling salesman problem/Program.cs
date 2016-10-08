@@ -11,6 +11,8 @@ namespace ConsoleApplication
 {
     public class Program
     {
+        private const int Steps = 50;
+
         public static void Main(string[] args)
         {
             var dataPath = BuildConfiguration()[$"{nameof(AppConfiguration)}:{nameof(AppConfiguration.GraphDataPath)}"];
@@ -18,12 +20,11 @@ namespace ConsoleApplication
             Console.WriteLine("Hello World!");
             var dataLoader = new GraphLoader(dataPath, 100);
             var graph = dataLoader.Load();
-            var solver = new TspSolver(new NearestNeighbourAlgorithm(), graph);
-            solver.Solve();
+            var solver = new TspSolver(graph);
+            solver.Solve(new NearestNeighbourAlgorithm(Steps));
             Console.WriteLine($"Min cost {solver.BestResult}, max cost {solver.WorstResult}, mean cost {solver.MeanReasult}");
             Console.WriteLine($"Best path ({solver.BestPath.Count()} elements): {solver.BestPath.Select(i => i.ToString()).Aggregate("", (accu, str) => accu += $"{str}, ")}");
             Console.WriteLine();
-            Console.ReadKey();
         }
 
         private static IConfigurationRoot BuildConfiguration() => new ConfigurationBuilder()
