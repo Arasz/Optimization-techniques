@@ -21,7 +21,14 @@ namespace ConsoleApplication
             var dataLoader = new GraphLoader(dataPath, 100);
             var graph = dataLoader.Load();
             var solver = new TspSolver(graph);
-            solver.Solve(new NearestNeighborAlgorithm(Steps));
+            solver.Solve(new NearestNeighbourAlgorithm(Steps));
+            Console.WriteLine("NEAREST NEIGHBOUR");
+            Console.WriteLine($"Min cost {solver.BestResult}, max cost {solver.WorstResult}, mean cost {solver.MeanReasult}");
+            Console.WriteLine($"Best path ({solver.BestPath.Count()} elements): {solver.BestPath.Select(i => i.ToString()).Aggregate("", (accu, str) => accu += $"{str}, ")}");
+            Console.WriteLine();
+
+            solver.Solve(new GreedyCycleAlgorithm(Steps));
+            Console.WriteLine("GREEDY CYCLE");
             Console.WriteLine($"Min cost {solver.BestResult}, max cost {solver.WorstResult}, mean cost {solver.MeanReasult}");
             Console.WriteLine($"Best path ({solver.BestPath.Count()} elements): {solver.BestPath.Select(i => i.ToString()).Aggregate("", (accu, str) => accu += $"{str}, ")}");
             Console.WriteLine();
