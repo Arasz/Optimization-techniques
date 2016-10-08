@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleApplication.Graphs
 {
-    public class Graph
+    public class CompleteGraph : IGraph
     {
         private readonly int[][] _graphMatrix;
 
@@ -26,55 +26,38 @@ namespace ConsoleApplication.Graphs
             }
         }
 
-        public int[] Nodes { get; }
+        public IGraphIterator Iterator => new GraphIterator(this);
+
+        public IEnumerable<int> Nodes { get; }
 
         public int NodesCount => _graphMatrix.Length;
 
-        public Graph(int[][] graphMatrix, int minNode, int lastNode)
+        public CompleteGraph(int[][] graphMatrix)
         {
             _graphMatrix = graphMatrix;
-            _minNode = minNode;
-            _lastNode = lastNode;
 
-            Nodes = Enumerable.Range(_minNode, _lastNode + 1).ToArray();
+            Nodes = Enumerable.Range(0, _graphMatrix.Length);
             CurrentNode = _minNode;
         }
 
-        public int Cost(int destinationNode) => _graphMatrix[CurrentNode][destinationNode];
-
-        public IEnumerable<int> NearestNodes() 
+        public int Cost(int destinationNode)
         {
-            var lastMinCost = 0;
-
-            for (var x = 0; x < _lastNode + 1; x++)
-            {
-                var minCost = _graphMatrix[CurrentNode].Where(cost => cost > lastMinCost).Min();
-                lastMinCost = minCost;
-
-                var index = 0;
-                while (index < _graphMatrix[CurrentNode].Length - 1)
-                {
-                    index++;
-                    if (_graphMatrix[CurrentNode][index] == minCost)
-                        break;
-                }
-                yield return index;
-            }
-
-            yield return -1;
+            return _graphMatrix[CurrentNode][destinationNode];
         }
 
-        public int NearestNode(IEnumerable<int> unvisitedNodes){
-            int bestNode = -1;
+        public int NearestNode(IEnumerable<int> unvisitedNodes)
+        {
+            var bestNode = -1;
             var minCost = -1;
-            foreach(int index in unvisitedNodes){
-                if(minCost < 0 || minCost > _graphMatrix[CurrentNode][index]){
-                    minCost = _graphMatrix[CurrentNode][index];
-                    bestNode = index;
-                }
+            foreach (var index in unvisitedNodes.Where(index => minCost < 0 || minCost > _graphMatrix[CurrentNode][index]))
+            {
+                minCost = _graphMatrix[CurrentNode][index];
+                bestNode = index;
             }
             return bestNode;
         }
+
+        public int[] NodeEdgesWeights(int node) => _graphMatrix[node];
 
         public override string ToString()
         {

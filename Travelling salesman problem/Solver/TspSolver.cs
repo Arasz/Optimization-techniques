@@ -8,7 +8,7 @@ namespace ConsoleApplication.Solver
 {
     public class TspSolver : ISolver
     {
-        private readonly Graph _graph;
+        private readonly CompleteGraph _completeGraph;
 
         public IEnumerable<int> BestPath { get; private set; }
 
@@ -20,9 +20,9 @@ namespace ConsoleApplication.Solver
 
         public int WorstResult { get; private set; }
 
-        public TspSolver(Graph graph)
+        public TspSolver(CompleteGraph completeGraph)
         {
-            _graph = graph;
+            _completeGraph = completeGraph;
         }
 
         public void Solve(IAlgorithm tspSolvingAlgorithm)
@@ -30,11 +30,11 @@ namespace ConsoleApplication.Solver
             BestResult = int.MaxValue;
             WorstResult = int.MinValue;
 
-            for (var startNode = 0; startNode < _graph.NodesCount; startNode++)
+            for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
             {
                 IList<int> path;
                 //TODO: pass steps in ctr
-                var localResult = tspSolvingAlgorithm.Solve(startNode, _graph, out path);
+                var localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, out path);
                 UpdateResults(localResult, path);
             }
         }

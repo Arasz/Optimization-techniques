@@ -12,9 +12,9 @@ namespace ConsoleApplication.Algorithms
         /// Solves TSP 
         /// </summary>
         /// <param name="startNode"> Algorithm start point </param>
-        /// <param name="graph"> Algorithm input data </param>
+        /// <param name="completeGraph"> Algorithm input data </param>
         /// <param name="path"> Path found by algorithm </param>
         /// <returns> Total path length </returns>
-        int Solve(int startNode, Graph graph, out IList<int> path);
+        int Solve(int startNode, CompleteGraph completeGraph, out IList<int> path);
     }
 }

@@ -11,14 +11,14 @@ namespace ConsoleApplication.Algorithms
         public GreedyCycleAlgorithm(int steps){
             _steps = steps;
         }
-        public int Solve(int startNode, Graph graph, out IList<int> path)
+        public int Solve(int startNode, CompleteGraph completeGraph, out IList<int> path)
         {
-            graph.CurrentNode = startNode;
+            completeGraph.CurrentNode = startNode;
             path = new List<int>();
             var pathCost = 0;
 
             path.Add(startNode);
-            var unvisitedNodes = graph.Nodes.Where(node => node != startNode).ToList();
+            var unvisitedNodes = completeGraph.Nodes.Where(node => node != startNode).ToList();
             var steps = _steps;
 
             while (--steps > 0)
@@ -29,7 +29,7 @@ namespace ConsoleApplication.Algorithms
                 unvisitedNodes.Remove(nearestUnvisited);
                 path.Add(nearestUnvisited);*/
             }
-            pathCost += graph.Cost(startNode);
+            pathCost += completeGraph.Cost(startNode);
             return pathCost;
         }
     }
