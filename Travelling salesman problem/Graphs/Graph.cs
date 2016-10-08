@@ -42,27 +42,7 @@ namespace ConsoleApplication.Graphs
 
         public int Cost(int destinationNode) => _graphMatrix[CurrentNode][destinationNode];
 
-        public IEnumerable<int> NearestNodes() 
-        {
-            var lastMinCost = 0;
-
-            for (var x = 0; x < _lastNode + 1; x++)
-            {
-                var minCost = _graphMatrix[CurrentNode].Where(cost => cost > lastMinCost).Min();
-                lastMinCost = minCost;
-
-                var index = 0;
-                while (index < _graphMatrix[CurrentNode].Length - 1)
-                {
-                    index++;
-                    if (_graphMatrix[CurrentNode][index] == minCost)
-                        break;
-                }
-                yield return index;
-            }
-
-            yield return -1;
-        }
+        public int Cost(int startNode, int destinationNode) => _graphMatrix[startNode][destinationNode];
 
         public int NearestNode(IEnumerable<int> unvisitedNodes){
             int bestNode = -1;
