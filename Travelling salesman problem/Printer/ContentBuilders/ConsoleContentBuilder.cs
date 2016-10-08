@@ -26,6 +26,7 @@ namespace ConsoleApplication.Printer.ContentBuilders
             foreach (var node in _solver.BestPath)
                 builder.Append($"{node}, ");
             builder.Remove(builder.Length - 2, 1);
+            builder.AppendLine();
             builder.AppendLine("".PadRight(30, '*'));
             return builder.ToString();
         }

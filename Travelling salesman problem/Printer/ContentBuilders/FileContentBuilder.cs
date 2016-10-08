@@ -34,7 +34,7 @@ namespace ConsoleApplication.Printer.ContentBuilders
             builder.AppendLine($"Elements in path: {_solver.BestPath.Count()}");
             builder.AppendLine("Path:");
             foreach (var node in _solver.BestPath)
-                builder.AppendLine($"{node} {coordinates[node + 1]}");
+                builder.AppendLine($"{node.ToString().PadRight(3)} {coordinates[node + 1]}");
             builder.AppendLine("".PadRight(30, '*'));
             return builder.ToString();
         }
@@ -56,7 +56,7 @@ namespace ConsoleApplication.Printer.ContentBuilders
                     if (line == "EOF")
                         break;
                     var splited = line.Split(' ');
-                    result[int.Parse(splited[0])] = $"{splited[1]} {splited[2]}";
+                    result[int.Parse(splited[0])] = $"{splited[1].PadRight(5)} {splited[2].PadRight(5)}";
                     line = reader.ReadLine();
                 }
             }
