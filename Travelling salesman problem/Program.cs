@@ -21,6 +21,7 @@ namespace ConsoleApplication
             var solver = new TspSolver(graph);
             var RegularFinder = new EdgeFinder();
             var GraspEdgeFinder = new GraspEdgeFinder(3);
+            
             SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, RegularFinder), "NEAREST NEIGHBOR");
 
             SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, RegularFinder), "GREEDY CYCLE");
