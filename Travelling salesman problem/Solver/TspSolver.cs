@@ -35,7 +35,6 @@ namespace ConsoleApplication.Solver
                 IList<int> path;
                 //TODO: pass steps in ctr
                 var localResult = tspSolvingAlgorithm.Solve(startNode, _graph, out path);
-
                 UpdateResults(localResult, path);
             }
         }

@@ -23,7 +23,7 @@ namespace ConsoleApplication.Algorithms
 
             while (--steps > 0)
             {
-                var nearestUnvisited = graph.NearestNodes().First(nearestNode => unvisitedNodes.Contains(nearestNode));
+                var nearestUnvisited = graph.NearestNode(unvisitedNodes);
                 pathCost += graph.Cost(nearestUnvisited);
                 graph.CurrentNode = nearestUnvisited;
                 unvisitedNodes.Remove(nearestUnvisited);

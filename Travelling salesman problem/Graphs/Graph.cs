@@ -9,19 +9,16 @@ namespace ConsoleApplication.Graphs
         private readonly int[][] _graphMatrix;
 
         private int _currentNode;
-        private int _maxNode;
+        private int _lastNode;
         private int _minNode;
-        private int[] _nearestNodes;
-
-        public int CostToNearest => _graphMatrix[CurrentNode][_nearestNodes[CurrentNode]];
 
         public int CurrentNode
         {
             get { return _currentNode; }
             set
             {
-                if (value > _maxNode)
-                    _currentNode = _maxNode;
+                if (value > _lastNode)
+                    _currentNode = _lastNode;
                 else if (value < _minNode)
                     _currentNode = _minNode;
                 else
@@ -33,23 +30,23 @@ namespace ConsoleApplication.Graphs
 
         public int NodesCount => _graphMatrix.Length;
 
-        public Graph(int[][] graphMatrix, int minNode, int maxNode)
+        public Graph(int[][] graphMatrix, int minNode, int lastNode)
         {
             _graphMatrix = graphMatrix;
             _minNode = minNode;
-            _maxNode = maxNode;
+            _lastNode = lastNode;
 
-            Nodes = Enumerable.Range(_minNode, _maxNode + 1).ToArray();
+            Nodes = Enumerable.Range(_minNode, _lastNode + 1).ToArray();
             CurrentNode = _minNode;
         }
 
         public int Cost(int destinationNode) => _graphMatrix[CurrentNode][destinationNode];
 
-        public IEnumerable<int> NearestNodes() //TODO: Optimize this shit
+        public IEnumerable<int> NearestNodes() 
         {
             var lastMinCost = 0;
 
-            for (var x = 0; x < _maxNode + 1; x++)
+            for (var x = 0; x < _lastNode + 1; x++)
             {
                 var minCost = _graphMatrix[CurrentNode].Where(cost => cost > lastMinCost).Min();
                 lastMinCost = minCost;
@@ -65,6 +62,18 @@ namespace ConsoleApplication.Graphs
             }
 
             yield return -1;
+        }
+
+        public int NearestNode(IEnumerable<int> unvisitedNodes){
+            int bestNode = -1;
+            var minCost = -1;
+            foreach(int index in unvisitedNodes){
+                if(minCost < 0 || minCost > _graphMatrix[CurrentNode][index]){
+                    minCost = _graphMatrix[CurrentNode][index];
+                    bestNode = index;
+                }
+            }
+            return bestNode;
         }
 
         public override string ToString()
