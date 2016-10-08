@@ -9,7 +9,9 @@ namespace ConsoleApplication.Graphs
         private readonly int[][] _graphMatrix;
 
         private int _currentNode;
+
         private int _lastNode;
+
         private int _minNode;
 
         public int CurrentNode

@@ -15,6 +15,6 @@ namespace ConsoleApplication.Algorithms
         /// <param name="completeGraph"> Algorithm input data </param>
         /// <param name="path"> Path found by algorithm </param>
         /// <returns> Total path length </returns>
-        int Solve(int startNode, CompleteGraph completeGraph, out IList<int> path);
+        int Solve(int startNode, IGraph completeGraph, out IList<int> path);
     }
 }

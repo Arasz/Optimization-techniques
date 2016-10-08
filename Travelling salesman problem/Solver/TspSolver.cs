@@ -8,7 +8,7 @@ namespace ConsoleApplication.Solver
 {
     public class TspSolver : ISolver
     {
-        private readonly CompleteGraph _completeGraph;
+        private readonly IGraph _completeGraph;
 
         public IEnumerable<int> BestPath { get; private set; }
 
@@ -20,7 +20,7 @@ namespace ConsoleApplication.Solver
 
         public int WorstResult { get; private set; }
 
-        public TspSolver(CompleteGraph completeGraph)
+        public TspSolver(IGraph completeGraph)
         {
             _completeGraph = completeGraph;
         }

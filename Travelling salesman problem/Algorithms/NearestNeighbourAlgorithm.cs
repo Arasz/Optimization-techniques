@@ -13,10 +13,10 @@ namespace ConsoleApplication.Algorithms
             _steps = steps;
         }
 
-        public int Solve(int startNode, CompleteGraph completeGraph, out IList<int> path)
+        public int Solve(int startNode, IGraph completeGraph, out IList<int> path)
         {
-            var itrerator = completeGraph.Iterator;
-            itrerator.MoveTo(startNode);
+            var iterator = completeGraph.Iterator;
+            iterator.MoveTo(startNode);
 
             path = new List<int>();
             var pathCost = 0;
@@ -27,19 +27,27 @@ namespace ConsoleApplication.Algorithms
 
             while (--steps > 0)
             {
-                var nearestNodeEdge = NearestNodeEdge(itrerator.Edges, unvisitedNodes);
+                var edgeToNearestNode = NearestNodeEdge(iterator.Edges, unvisitedNodes);
 
-                pathCost += nearestNodeEdge.Weight;
+                pathCost += edgeToNearestNode.Weight;
 
-                itrerator.MoveAlongEdge(nearestNodeEdge);
+                iterator.MoveAlongEdge(edgeToNearestNode);
 
-                unvisitedNodes.Remove(nearestNodeEdge.TargetNode);
+                unvisitedNodes.Remove(iterator.CurrentNode);
 
-                path.Add(nearestNodeEdge.TargetNode);
+                path.Add(iterator.CurrentNode);
             }
-            pathCost += completeGraph.Cost(startNode);
-            path.Add(startNode);
+
+            MoveToStart(startNode, path, iterator, ref pathCost);
+
             return pathCost;
+        }
+
+        private static void MoveToStart(int startNode, IList<int> path, IGraphIterator iterator, ref int pathCost)
+        {
+            var edgeToStart = iterator.Edges.First(edge => edge.TargetNode == startNode);
+            pathCost += edgeToStart.Weight;
+            path.Add(edgeToStart.TargetNode);
         }
 
         private Edge NearestNodeEdge(IEnumerable<Edge> edges, IEnumerable<int> unvisitedNodes) => edges

@@ -17,7 +17,7 @@ namespace ConsoleApplication.Graphs
             _dataPath = dataPath;
         }
 
-        public CompleteGraph Load()
+        public IGraph Load()
         {
             if (!File.Exists(_dataPath))
                 throw new FileNotFoundException();
