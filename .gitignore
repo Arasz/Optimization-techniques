@@ -207,3 +207,8 @@ __pycache__/
 
 #Config file
 **/config.json
+
+#Latex
+*.aux
+*.log
+*.gz
