@@ -29,7 +29,8 @@ namespace ConsoleApplication.Algorithms
                 unvisitedNodes.Remove(nearestUnvisited);
                 path.Add(nearestUnvisited);
             }
-
+            pathCost += graph.Cost(startNode);
+            path.Add(startNode);
             return pathCost;
         }
     }
