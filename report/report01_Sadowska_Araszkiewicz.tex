@@ -44,13 +44,14 @@ Sprawozdanie}
 \section{Wprowadzenie}
 Celem ćwiczenia było zaimplementowanie algorytmów rozwiazujących problem Komiwojażera dla zbioru 100 punktów. Algorytmy te znaleźc miały najbardziej optymalną ścieżkę łączącą 50 dowolnych punktów grafu gdzie punktem startowym miał być każdy z punktów znujdujacych się w zbiorze.
 \section{Nearest Neighbour}
-\subsection{Opis}
+\label{Nearest}
+W algorytmie tym trasa budowana jest w taki sposób że w każdym punkcie szukamy trasy o najmniejszym koszcie (odległości) i punkt do którego ta trasa prowadzi dodajemy do ścieżki i dla niego szukamy kolejnego najbliższego punktu w grafie.
 \subsection{Implementacja w pseudokodzie}
 \subsection{Wyniki}
 \begin{table}[H]
 \center
-\caption{Greedy Cycle - wyniki}
-\label{Greedy Cycle - wyniki}
+\caption{Nearest Neighbour - wyniki}
+\label{Nearest Neighbour - wyniki}
 \begin{tabular}{|p{1cm}|p{14cm}|}
 \hline
 min       & 10298 \\ \hline
@@ -60,9 +61,15 @@ best path & 80, 24, 60, 50, 86, 8, 6, 56, 19, 11, 26, 85, 34, 61, 59, 76, 22, 97
 \end{tabular}
 \end{table}
 
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 0.5\textwidth, height=!]{images/NN.png}
+\caption{Najlepsza trasa - Nearest Neighbour}
+\label{Rys. NN}
+\end{figure}
+
 \section{Greedy Cycle}
 \label{Greedy}
-\subsection{Opis}
 W algorytmie tym trasa jest budowana w taki sposób, aby zawsze tworzyła cykl Hamiltona. W każdej iteracji dodawany jest jeden najkrótszy łuk z pozostałych dostępnych.
 \subsection{Implementacja w pseudokodzie}
 \begin{lstlisting}[frame=single]
@@ -104,15 +111,34 @@ best path & 61, 34, 85, 26, 11, 19, 6, 8, 56, 86, 50, 24, 80, 60, 57, 66, 27, 92
 \end{tabular}
 \end{table}
 
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 0.5\textwidth, height=!]{images/GC.png}
+\caption{Najlepsza trasa - Greedy Cycle}
+\label{Rys. NN}
+\end{figure}
+
 \section{Nearest Neighbour Grasp}
-\subsection{Opis}
+Modyfikacja algorytmu Nearest Neighbour opisanego w punkcie \ref{Nearest} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiazań i z nich losujemy te, które będzie dodane do ścieżki.
 \subsection{Implementacja w pseudokodzie}
 \subsection{Wyniki}
 
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 0.5\textwidth, height=!]{images/NNG.png}
+\caption{Najlepsza trasa - Nearest Neighbour Grasp}
+\label{Rys. NNG}
+\end{figure}
 \section{Greedy Cycle Grasp}
-\subsection{Opis}
-Modyfikacja algorytmu Greedy Cycle opisanego w punkcie \ref{Greedy} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiazań i z nich losulemy te, które będzie dodane do ścieżki.
+Modyfikacja algorytmu Greedy Cycle opisanego w punkcie \ref{Greedy} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiazań i z nich losujemy te, które będzie dodane do ścieżki.
 \subsection{Implementacja w pseudokodzie}
 \subsection{Wyniki}
+
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 0.5\textwidth, height=!]{images/GCG.png}
+\caption{Najlepsza trasa - Greedy Cycle Grasp}
+\label{Rys. GGC}
+\end{figure}
 
 \end{document}
