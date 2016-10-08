@@ -19,13 +19,15 @@ namespace ConsoleApplication
             var dataLoader = new GraphLoader(dataPath, 100);
             var graph = dataLoader.Load();
             var solver = new TspSolver(graph);
-            EdgeFinder RegularFinder = new EdgeFinder();
-            GraspEdgeFinder GraspEdgeFinder = new GraspEdgeFinder(3);
+            var RegularFinder = new EdgeFinder();
+            var GraspEdgeFinder = new GraspEdgeFinder(3);
             SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, RegularFinder), "NEAREST NEIGHBOR");
 
             SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, RegularFinder), "GREEDY CYCLE");
 
             SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, GraspEdgeFinder), "NEAREST NEIGHBOR GRASP");
+
+            SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, GraspEdgeFinder), "GREEDY CYCLE GRASP");
 
             Console.ReadKey();
         }
