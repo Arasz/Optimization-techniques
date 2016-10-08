@@ -36,5 +36,7 @@ namespace ConsoleApplication.Graphs
             }
             return stringBuilder.ToString();
         }
+
+        public int Weight(int sourceNode, int targetNode) => _graphMatrix[sourceNode][targetNode];
     }
 }

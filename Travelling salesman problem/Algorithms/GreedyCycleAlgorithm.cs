@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConsoleApplication.Algorithms
 {
-    public class GreedyCycleAlgorithm : IAlgorithm
+    public class GreedyCycleAlgorithm : AlgorithmBase
     {
         private int _steps { get; }
 
@@ -13,15 +13,14 @@ namespace ConsoleApplication.Algorithms
             _steps = steps;
         }
 
-        public int Solve(int startNode, IGraph completeGraph, out IList<int> path)
+        public override int Solve(int startNode, IGraph completeGraph, out IList<int> path)
         {
+            var iterator = completeGraph.Iterator;
 
             path = new List<int>();
             if (_steps < 1)
-            {
                 return 0;
-            }
-            completeGraph.CurrentNode = startNode;
+            iterator.MoveTo(startNode);
             var pathCost = 0;
 
             path.Add(startNode);
@@ -29,70 +28,76 @@ namespace ConsoleApplication.Algorithms
             var steps = _steps;
 
             //find nearest to start point
-            var nearestUnvisited = completeGraph.NearestNode(unvisitedNodes);
-            pathCost += completeGraph.Cost(startNode, nearestUnvisited);
-            pathCost += completeGraph.Cost(nearestUnvisited, startNode);
+            var nearestNodeEdge = NearestNodeEdge(iterator.Edges, unvisitedNodes);
 
-            completeGraph.CurrentNode = nearestUnvisited;
-            unvisitedNodes.Remove(nearestUnvisited);
+            pathCost += nearestNodeEdge.Weight;
 
-            path.Add(nearestUnvisited);
-            path.Add(startNode);
+            iterator.MoveAlongEdge(nearestNodeEdge);
+            unvisitedNodes.Remove(iterator.CurrentNode);
+            path.Add(iterator.CurrentNode);
+
             steps--;
 
-            pathCost += completeGraph.Cost(startNode);
+            while (steps-- != 0)
             {
                 Result bestResult = new Result();
-                for (int node = 0; node < (path.Count - 2); node++)
+                for (var node = 0; node < (path.Count - 2); node++)
                 {
-                    var localBestResult = getBestResult(path[node], path[node + 1], unvisitedNodes, graph);
-                    if (bestResult.cost < 0 || localBestResult.cost < bestResult.cost)
+                    var localBestResult = getBestResult(path[node], path[node + 1], unvisitedNodes, completeGraph);
+                    if (bestResult.Cost < 0 || localBestResult.Cost < bestResult.Cost)
                     {
                         bestResult = localBestResult;
-                        bestResult.followingNode = node + 1;
+                        bestResult.FollowingNode = node + 1;
                     }
                 }
-                int previousNode = path[bestResult.followingNode - 1];
-                int followingNode = path[bestResult.followingNode];
-                path.Insert(bestResult.followingNode, bestResult.bestNode);
-                pathCost -= completeGraph.Cost(previousNode, followingNode);
-                pathCost += completeGraph.Cost(previousNode, bestResult.bestNode) + completeGraph.Cost(bestResult.bestNode, followingNode);
-                unvisitedNodes.Remove(bestResult.bestNode);
+                var previousNode = path[bestResult.FollowingNode - 1];
+                var followingNode = path[bestResult.FollowingNode];
+
+                path.Insert(bestResult.FollowingNode, bestResult.BestNode);
+
+                pathCost -= completeGraph.Weight(previousNode, followingNode);
+                pathCost += completeGraph.Weight(previousNode, bestResult.BestNode) + completeGraph.Weight(bestResult.BestNode, followingNode);
+
+                unvisitedNodes.Remove(bestResult.BestNode);
             }
+            iterator.MoveTo(path.Last());
+            path.Add(startNode);
+            pathCost += iterator.EdgeWeight(startNode);
             return pathCost;
         }
 
-        private Result getBestResult(int firstNode, int secondNode, List<int> unvisitedNodes, Graph graph)
+        private Result getBestResult(int firstNode, int secondNode, List<int> unvisitedNodes, IGraph graph)
         {
             Result result = new Result();
 
-            foreach (int unvisitedNode in unvisitedNodes)
+            foreach (var unvisitedNode in unvisitedNodes)
             {
-                int previousCost = graph.Cost(firstNode, secondNode);
-                int cost = graph.Cost(firstNode, unvisitedNode) + graph.Cost(unvisitedNode, secondNode);
-                int costDifference = cost - previousCost;
-                if (result.cost < 0 || costDifference < result.cost)
+                var previousCost = graph.Weight(firstNode, secondNode);
+                var cost = graph.Weight(firstNode, unvisitedNode) + graph.Weight(unvisitedNode, secondNode);
+                var costDifference = cost - previousCost;
+                if (result.Cost < 0 || costDifference < result.Cost)
                 {
-                    result.cost = costDifference;
-                    result.bestNode = unvisitedNode;
+                    result.Cost = costDifference;
+                    result.BestNode = unvisitedNode;
                 }
             }
             return result;
         }
-
     }
 
-    class Result
+    internal class Result
     {
+        public int BestNode { get; set; }
+
+        public int Cost { get; set; }
+
+        public int FollowingNode { get; set; }
 
         public Result()
         {
-            bestNode = -1;
-            cost = -1;
-            followingNode = -1;
+            BestNode = -1;
+            Cost = -1;
+            FollowingNode = -1;
         }
-        public int bestNode { get; set; }
-        public int cost { get; set; }
-        public int followingNode { get; set; }
     }
 }

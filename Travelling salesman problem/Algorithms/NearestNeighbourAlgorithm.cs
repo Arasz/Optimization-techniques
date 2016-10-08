@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConsoleApplication.Algorithms
 {
-    public class NearestNeighborAlgorithm : IAlgorithm
+    public class NearestNeighborAlgorithm : AlgorithmBase
     {
         private int _steps { get; }
 
@@ -13,7 +13,7 @@ namespace ConsoleApplication.Algorithms
             _steps = steps;
         }
 
-        public int Solve(int startNode, IGraph completeGraph, out IList<int> path)
+        public override int Solve(int startNode, IGraph completeGraph, out IList<int> path)
         {
             var iterator = completeGraph.Iterator;
             iterator.MoveTo(startNode);
@@ -43,10 +43,5 @@ namespace ConsoleApplication.Algorithms
 
             return pathCost;
         }
-
-        private Edge NearestNodeEdge(IEnumerable<Edge> edges, IEnumerable<int> unvisitedNodes) => edges
-            .Where(edge => unvisitedNodes.Contains(edge.TargetNode))
-            .OrderBy(edge => edge.Weight)
-            .First();
     }
 }
