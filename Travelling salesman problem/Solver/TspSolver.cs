@@ -30,13 +30,13 @@ namespace ConsoleApplication.Solver
             BestResult = int.MaxValue;
             WorstResult = int.MinValue;
 
-           // for (var startNode = 0; startNode < _graph.NodesCount; startNode++)
-           // {
+            for (var startNode = 0; startNode < _graph.NodesCount; startNode++)
+            {
                 IList<int> path;
                 //TODO: pass steps in ctr
-                var localResult = tspSolvingAlgorithm.Solve(61, _graph, out path);
+                var localResult = tspSolvingAlgorithm.Solve(startNode, _graph, out path);
                 UpdateResults(localResult, path);
-          //  }
+            }
         }
 
         private void UpdateResults(int localResult, IEnumerable<int> path)
