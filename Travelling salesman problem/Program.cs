@@ -21,6 +21,7 @@ namespace ConsoleApplication
             var coordinatesPath = buildConfig[$"{nameof(AppConfiguration)}:{nameof(AppConfiguration.GraphCoordinatesPath)}"];
             var dataLoader = new GraphLoader(dataPath, 100);
             var graph = dataLoader.Load();
+
             var solver = new TspSolver(graph);
 
             var resultPrinter = new ResultPrinter()
