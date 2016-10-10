@@ -3,7 +3,7 @@
 \usepackage[MeX]{polski}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[letterpaper, portrait, margin=1.7in]{geometry}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{subfigure}
@@ -33,14 +33,14 @@
 \usepackage{titlesec}
 \titlelabel{\thetitle.\quad}
 \title{\textbf{Techniki Optymalizacji} \\
-Labolatorium nr 1 \\
+Laboratorium nr 1 \\
 Sprawozdanie}
 \author{Paulina Sadowska, Rafał Araszkiewicz}
 \begin{document}
 \maketitle
 
 \section{Wprowadzenie}
-Celem ćwiczenia było zaimplementowanie algorytmów rozwiazujących problem Komiwojażera dla zbioru 100 punktów. Algorytmy te znaleźc miały najbardziej optymalną ścieżkę łączącą 50 dowolnych punktów grafu gdzie punktem startowym miał być każdy z punktów znujdujacych się w zbiorze. Date testowe zawarte są na \hyperref[http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/kroA100.xml.zip]{stronie Uniwersytetu Heidelberg}. 
+Celem ćwiczenia było zaimplementowanie algorytmów rozwiązujących problem Komiwojażera dla zbioru 100 punktów. Algorytmy te znaleźć miały najbardziej optymalną ścieżkę łączącą 50 dowolnych punktów grafu gdzie punktem startowym miał być każdy z punktów znajdujących się w zbiorze. Dane testowe zawarte są na \hyperref[http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/kroA100.xml.zip]{stronie Uniwersytetu Heidelberg}. 
 \section{Nearest Neighbour}
 \label{Nearest}
 W algorytmie tym trasa budowana jest w taki sposób że w każdym punkcie szukamy trasy o najmniejszym koszcie (odległości) i punkt do którego ta trasa prowadzi dodajemy do ścieżki i dla niego szukamy kolejnego najbliższego punktu w grafie.
@@ -109,7 +109,7 @@ dla kazdego z zdefiniowanych punktow poczatkowych
 	dla pozostalych 48 krokow
 		dla wszystkich par punktow w sciezce
 			dla wszystkich nieodwiedzonych punktow
-				koszt = odleglosc miedzy para punktow - odleglosc miedzy trojka punktow
+				koszt = odleglosc miedzy trojka punktow - odleglosc miedzy para punktow
 				jezeli koszt < dotychczasowy najmniejszy koszt
 					dotychczasowy najmniejszy koszt = koszt
 			koniec
@@ -141,9 +141,9 @@ best path & 61, 34, 85, 26, 11, 19, 6, 8, 56, 86, 50, 24, 80, 60, 57, 66, 27, 92
 \end{figure}
 
 \section{Nearest Neighbour Grasp}
-Modyfikacja algorytmu Nearest Neighbour opisanego w punkcie \ref{Nearest} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiazań i z nich losujemy te, które będzie dodane do ścieżki.
+Modyfikacja algorytmu Nearest Neighbour opisanego w punkcie \ref{Nearest} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiązań i z nich losujemy te, które będzie dodane do ścieżki.
 \subsection{Implementacja w pseudokodzie}
-Analogiczna do zawartej w podpunkcie \ref{Nearest code} z tą różnicą że zamiast szukać jednego punktu grafu znajdującego się najblizej aktualnego punktu ścieżki należy znaleźć 3 najlepsze i wybrać losowy z nich.
+Analogiczna do zawartej w podpunkcie \ref{Nearest code} z tą różnicą że zamiast szukać jednego punktu grafu znajdującego się najbliżej aktualnego punktu ścieżki należy znaleźć 3 najlepsze i wybrać losowy z nich.
 
 \begin{lstlisting}[frame=single]
 dla kazdego z zdefiniowanych punktow poczatkowych
@@ -240,7 +240,7 @@ best path &  76
 \label{Rys. NNG}
 \end{figure}
 \section{Greedy Cycle Grasp}
-Modyfikacja algorytmu Greedy Cycle opisanego w punkcie \ref{Greedy} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiazań i z nich losujemy te, które będzie dodane do ścieżki.
+Modyfikacja algorytmu Greedy Cycle opisanego w punkcie \ref{Greedy} polegająca na tym, że w każdym kroku szukamy 3 najlepszych rozwiązań i z nich losujemy te, które będzie dodane do ścieżki.
 \subsection{Implementacja w pseudokodzie}
 Analogiczna do zawartej w podpunkcie \ref{Greedy code} z tą różnicą że zamiast szukać jednej ścieżki która da najmniejsza różnice kosztów należy znaleźć 3 najlepsze trasy i wybrać losową z nich.
 
@@ -259,7 +259,7 @@ dla kazdego z zdefiniowanych punktow poczatkowych
 	dla pozostalych 48 krokow
 		dla wszystkich par punktow w sciezce
 			dla wszystkich nieodwiedzonych punktow
-				koszt = odleglosc miedzy para punktow - odleglosc miedzy trojka punktow
+				koszt = odleglosc miedzy trojka punktow - odleglosc miedzy para punktow
 				jezeli koszt < najwiekszy z listy 3 najmniejszych odleglosci
 					dodaj koszt do listy 3 najmniejszych odleglosci zamiast najwiekszego z listy
 			koniec
