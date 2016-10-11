@@ -6,52 +6,52 @@ using System.Linq;
 
 namespace ConsoleApplication.Solver
 {
-    public class TspSolver : ISolver
-    {
-        private readonly IGraph _completeGraph;
+	public class TspSolver : ISolver
+	{
+		private readonly IGraph _completeGraph;
 
-        public IEnumerable<int> BestPath { get; private set; }
+		public IEnumerable<int> BestPath { get; private set; }
 
-        public int BestResult { get; private set; }
+		public int BestResult { get; private set; }
 
-        public int MeanReasult { get; private set; }
+		public int MeanReasult { get; private set; }
 
-        public IList<int> Results { get; } = new List<int>();
+		public IList<int> Results { get; } = new List<int>();
 
-        public int WorstResult { get; private set; }
+		public int WorstResult { get; private set; }
 
-        public TspSolver(IGraph completeGraph)
-        {
-            _completeGraph = completeGraph;
-        }
+		public TspSolver(IGraph completeGraph)
+		{
+			_completeGraph = completeGraph;
+		}
 
-        public void Solve(IAlgorithm tspSolvingAlgorithm)
-        {
-            BestResult = int.MaxValue;
-            WorstResult = int.MinValue;
+		public void Solve(IAlgorithm tspSolvingAlgorithm)
+		{
+			BestResult = int.MaxValue;
+			WorstResult = int.MinValue;
 
-            for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
-            {
-                IList<int> path;
-                //TODO: pass steps in ctr
-                var localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, out path);
-                UpdateResults(localResult, path);
-            }
-        }
+			for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
+			{
+				IList<int> path = new List<int>();
+				//TODO: pass steps in ctr
+				var localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, path);
+				UpdateResults(localResult, path);
+			}
+		}
 
-        private void UpdateResults(int localResult, IEnumerable<int> path)
-        {
-            if (localResult < BestResult)
-            {
-                BestResult = localResult;
-                BestPath = path;
-            }
+		private void UpdateResults(int localResult, IEnumerable<int> path)
+		{
+			if (localResult < BestResult)
+			{
+				BestResult = localResult;
+				BestPath = path;
+			}
 
-            if (localResult > WorstResult)
-                WorstResult = localResult;
+			if (localResult > WorstResult)
+				WorstResult = localResult;
 
-            Results.Add(localResult);
-            MeanReasult = (int)Math.Round(Results.Average());
-        }
-    }
+			Results.Add(localResult);
+			MeanReasult = (int)Math.Round(Results.Average());
+		}
+	}
 }
