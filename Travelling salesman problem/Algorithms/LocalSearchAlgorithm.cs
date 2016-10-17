@@ -14,7 +14,7 @@ namespace ConsoleApplication.Algorithms
 		public override int Solve(int startNode, IGraph completeGraph, IList<int> path)
 		{
 			var solution = path;
-			var currentCostIncrese = 0.0;
+			var currentCostIncrese = -1;
 
 			while (currentCostIncrese < 0)
 			{
@@ -42,7 +42,6 @@ namespace ConsoleApplication.Algorithms
 				}
 				currentCostIncrese = bestMove.CostDifference;
 			}
-
 			return solution.Aggregate(0, (accu, ele) => accu += ele);
 		}
 
@@ -88,7 +87,20 @@ namespace ConsoleApplication.Algorithms
         {
 			Move bestMove = new Move();
 			bestMove.Strategy = LocalSearchStrategy.EDGES;
-			//TODO - implement search
+			
+			for(int i=0; i<path.Count - 1; i++){
+				for(int j = i; j<path.Count - 1; j++){
+					int currentCost = completeGraph.Weight(path[i], path[i+1]) + completeGraph.Weight(path[j], path[j+1]);
+					int newCost = completeGraph.Weight(path[i], path[j]) + completeGraph.Weight(path[i+1], path[j+1]);
+					int newCostDifference = newCost - currentCost;
+					if(newCost < currentCost && bestMove.CostDifference < newCostDifference){
+						bestMove.CostDifference = newCostDifference;
+						bestMove.FirstPointIndex = i; 
+						bestMove.SecondPointIndex = j;
+					}
+				}
+			}
+
 			return bestMove;
         }
     }
@@ -97,7 +109,7 @@ namespace ConsoleApplication.Algorithms
 	{
 		public int FirstPointIndex {get; set;}
         public int SecondPointIndex{get; set;}
-        public float CostDifference{get; set;}
+        public int CostDifference{get; set;}
 
         public LocalSearchStrategy Strategy{get; set;}
 	}
