@@ -29,7 +29,7 @@ namespace ConsoleApplication.Algorithms
 		private Move FindBestMove(IList<int> path, IGraph completeGraph)
 		{
 			Move bestVertice = FindBestVerticeFlip(path, completeGraph);
-			Move bestEdge = FindBestEdgeFlip(path);
+			Move bestEdge = FindBestEdgeFlip(path, completeGraph);
 
 			if(bestEdge.CostDifference > 0 && bestVertice.CostDifference > 0)
 				return null;
@@ -41,20 +41,35 @@ namespace ConsoleApplication.Algorithms
 
         private Move FindBestVerticeFlip(IList<int> path, IGraph completeGraph)
         {
-            var iterator = completeGraph.Iterator;
 			Move bestMove = new Move();
+			bestMove.Strategy = LocalSearchStrategy.VERTICES;
 			for (var pointIndex = 1; pointIndex < (path.Count - 1); pointIndex++){
-				int currentCost = completeGraph.Weight(pointIndex-1, pointIndex) + completeGraph.Weight(pointIndex, pointIndex+1);
-				iterator.MoveTo(pointIndex);
-				//TODO - dla kazdego z punktów grafu oblicz koszt i wpisz róznice (new - current) do best move
+				int indexBefore = path[pointIndex-1];
+				int index = path[pointIndex];
+				int indexAfter = path[pointIndex+1];
+				int currentCost = completeGraph.Weight(indexBefore, index) + completeGraph.Weight(index, indexAfter);
+				var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
+				for(int i = 0; i < unvisitedNodes.Count; i++){
+					int newNode = unvisitedNodes[i];
+					int newCost = completeGraph.Weight(indexBefore, newNode) + completeGraph.Weight(newNode, indexAfter);
+					int newCostDifference = newCost - currentCost;
+					if(newCost < currentCost && bestMove.CostDifference < newCostDifference){
+						bestMove.CostDifference = newCostDifference;
+						bestMove.FirstPointIndex = index;
+						bestMove.SecondPointIndex = unvisitedNodes[i];
+					}
+				}
 			}
+			//TODO - include path indexees groups: last, fist, second and one before last, last, first
 			return bestMove;
         }
 
-        private Move FindBestEdgeFlip(IList<int> path)
+        private Move FindBestEdgeFlip(IList<int> path, IGraph completeGraph)
         {
-			//TODO - implement
-            throw new NotImplementedException();
+			Move bestMove = new Move();
+			bestMove.Strategy = LocalSearchStrategy.EDGES;
+			//TODO - implement search
+			return bestMove;
         }
     }
 

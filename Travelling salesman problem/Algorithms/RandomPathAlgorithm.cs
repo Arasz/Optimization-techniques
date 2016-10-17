@@ -16,8 +16,8 @@ namespace ConsoleApplication.Algorithms
 		public override int Solve(int startNode, IGraph completeGraph, IList<int> path)
 		{
             
-        var iterator = completeGraph.Iterator;
-			iterator.MoveTo(startNode);
+        	var iterator = completeGraph.Iterator;
+			int size = completeGraph.NodesCount;
 
 			var pathCost = 0;
 
@@ -27,7 +27,7 @@ namespace ConsoleApplication.Algorithms
 
 			while (--steps > 0)
 			{
-				var edgeToNearestNode = _edgeFinder.(iterator.Edges, unvisitedNodes);
+				var edgeToNearestNode = getRandomEdge(iterator.Edges, unvisitedNodes);
 
 				pathCost += edgeToNearestNode.Weight;
 
@@ -43,5 +43,12 @@ namespace ConsoleApplication.Algorithms
 
 			return pathCost;
 		}
+
+	 	public Edge getRandomEdge(IEnumerable<Edge> edges, IEnumerable<int> unvisitedNodes){
+			 var unvisitedEdges = edges.Where(edge => unvisitedNodes.Contains(edge.TargetNode));
+			 int index = _randomGenerator.Next(0, unvisitedEdges.Count());
+			 return unvisitedEdges.ElementAt(index);
+		}
+                                
 	}
 }
