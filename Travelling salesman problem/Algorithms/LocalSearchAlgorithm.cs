@@ -19,7 +19,27 @@ namespace ConsoleApplication.Algorithms
 			while (currentCostIncrese < 0)
 			{
 				var bestMove = FindBestMove(path, completeGraph);
-				//TODO - do the move 
+				if(bestMove.Strategy == LocalSearchStrategy.VERTICES){
+					//flip VERTICES
+					// FIRST - node you want to exclude from path
+					// SECOND - node you want to add to path
+					int nodetoExcludeIndex = bestMove.FirstPointIndex;
+					path[nodetoExcludeIndex] = bestMove.SecondPointIndex;
+				} else
+				{
+					//flip EDGES
+					List<int> output = new List<int>(path);
+					int length = bestMove.SecondPointIndex - bestMove.FirstPointIndex;
+					List<int> path1 = output.GetRange(0, bestMove.FirstPointIndex);
+					List<int> path2 = output.GetRange(bestMove.FirstPointIndex+1, length);
+					List<int> path3 = output.GetRange(bestMove.SecondPointIndex+1, output.Count - length);
+					path2.Reverse();
+					path.Clear();
+					output.AddRange(path1);
+					output.AddRange(path2);
+					output.AddRange(path3);
+					path = output;
+				}
 				currentCostIncrese = bestMove.CostDifference;
 			}
 
@@ -55,8 +75,8 @@ namespace ConsoleApplication.Algorithms
 					int newCostDifference = newCost - currentCost;
 					if(newCost < currentCost && bestMove.CostDifference < newCostDifference){
 						bestMove.CostDifference = newCostDifference;
-						bestMove.FirstPointIndex = index;
-						bestMove.SecondPointIndex = unvisitedNodes[i];
+						bestMove.FirstPointIndex = pointIndex; // node you want to exclude from path
+						bestMove.SecondPointIndex = unvisitedNodes[i]; // node you want to add to path
 					}
 				}
 			}
