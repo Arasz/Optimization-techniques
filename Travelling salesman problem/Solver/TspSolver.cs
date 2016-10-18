@@ -19,7 +19,7 @@ namespace ConsoleApplication.Solver
 
 			for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
 			{
-				IList<int> path = new List<int>();
+				var path = new List<int>();
 				int localResult;
 				//TODO: pass steps in ctr
 				var context = SolvingTimeContext.Instance;

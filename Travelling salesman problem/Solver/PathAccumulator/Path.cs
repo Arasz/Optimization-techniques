@@ -6,9 +6,9 @@ namespace ConsoleApplication.Solver.SolverVisitor
 	{
 		public int Cost { get; set; }
 
-		public IList<int> NodesList { get; set; }
+		public List<int> NodesList { get; set; }
 
-		public Path(IList<int> nodesList, int cost)
+		public Path(List<int> nodesList, int cost)
 		{
 			NodesList = nodesList;
 			Cost = cost;

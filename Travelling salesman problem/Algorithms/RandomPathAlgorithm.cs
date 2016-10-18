@@ -13,7 +13,7 @@ namespace ConsoleApplication.Algorithms
             _randomGenerator = new Random();
 		}
 
-		public override int Solve(int startNode, IGraph completeGraph, IList<int> path)
+		public override int Solve(int startNode, IGraph completeGraph, List<int> path)
 		{
             
         	var iterator = completeGraph.Iterator;

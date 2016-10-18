@@ -4,18 +4,14 @@ using System.Linq;
 
 namespace ConsoleApplication.Algorithms
 {
-	/// <summary>
-	/// Reprezentuje ruch wykonany w algorytmie 
-	/// </summary>
-	internal struct LocalSearchMove
+	internal interface IMove
 	{
-		public int CostDifference { get; set; }
+		/// <summary>
+		/// Reprezentuje zysk jaki otrzymujemy po wykonaniu ruchu (zmniejszenie kosztu) 
+		/// </summary>
+		int CostImprovement { get; set; }
 
-		public int FirstPointIndex { get; set; }
-
-		public int SecondPointIndex { get; set; }
-
-		public LocalSearchStrategy Strategy { get; set; }
+		bool Move(List<int> path);
 	}
 
 	public class LocalSearchAlgorithm : AlgorithmBase
@@ -24,58 +20,32 @@ namespace ConsoleApplication.Algorithms
 		{
 		}
 
-		public override int Solve(int startNode, IGraph completeGraph, IList<int> path)
+		public override int Solve(int startNode, IGraph completeGraph, List<int> path)
 		{
-			var solution = path;
-			var currentCostIncrese = -1;
+			while (FindBestMove(path, completeGraph)?.Move(path) ?? false) ;
 
-			while (currentCostIncrese < 0)
-			{
-				var bestMove = FindBestMove(path, completeGraph);
-				if (bestMove.Strategy == LocalSearchStrategy.Vertices)
-				{
-					//flip VERTICES
-					// FIRST - node you want to exclude from path
-					// SECOND - node you want to add to path
-					var nodetoExcludeIndex = bestMove.FirstPointIndex;
-					path[nodetoExcludeIndex] = bestMove.SecondPointIndex;
-				}
-				else
-				{
-					//flip EDGES
-					var output = new List<int>(path);
-					var length = bestMove.SecondPointIndex - bestMove.FirstPointIndex;
-					var path1 = output.GetRange(0, bestMove.FirstPointIndex);
-					var path2 = output.GetRange(bestMove.FirstPointIndex + 1, length);
-					var path3 = output.GetRange(bestMove.SecondPointIndex + 1, output.Count - path1.Count - path2.Count-1);
-					path2.Reverse();
-					path.Clear();
-					output.AddRange(path1);
-					output.AddRange(path2);
-					output.AddRange(path3);
-					path = output;
-				}
-				currentCostIncrese = bestMove.CostDifference;
-			}
-			return solution.Aggregate(0, (accu, ele) => accu += ele);
+			return path.Aggregate(0, (accu, ele) => accu += ele);
 		}
 
-		private LocalSearchMove FindBestEdgeFlip(IList<int> path, IGraph completeGraph)
+		private IMove FindBestEdgeMove(IList<int> path, IGraph completeGraph)
 		{
-			var bestLocalSearchMove = new LocalSearchMove { Strategy = LocalSearchStrategy.Edges };
+			var bestLocalSearchMove = new EdgeMove();
 
-			for (var i = 0; i < path.Count - 1; i++)
+			for (var i = 0; i < path.Count - 3; i++)
 			{
-				for (var j = i+1; j < path.Count - 1; j++)
+				for (var j = i + 2; j < path.Count - 1; j++)
 				{
-					var currentCost = completeGraph.Weight(path[i], path[i + 1]) + completeGraph.Weight(path[j], path[j + 1]);
-					var newCost = completeGraph.Weight(path[i], path[j]) + completeGraph.Weight(path[i + 1], path[j + 1]);
-					var newCostDifference = newCost - currentCost;
-					if (newCost < currentCost && newCostDifference < bestLocalSearchMove.CostDifference )
+					var lineCost = completeGraph.Weight(path[i], path[i + 1]) + completeGraph.Weight(path[j], path[j + 1]);
+
+					var crossCost = completeGraph.Weight(path[i], path[j]) + completeGraph.Weight(path[i + 1], path[j + 1]);
+
+					var costDifference = crossCost - lineCost;
+
+					if (crossCost < lineCost && costDifference < bestLocalSearchMove.CostImprovement)
 					{
-						bestLocalSearchMove.CostDifference = newCostDifference;
-						bestLocalSearchMove.FirstPointIndex = i;
-						bestLocalSearchMove.SecondPointIndex = j;
+						bestLocalSearchMove.CostImprovement = costDifference;
+						bestLocalSearchMove.FirstNodePathIndex = i;
+						bestLocalSearchMove.SecondNodePathIndex = j;
 					}
 				}
 			}
@@ -83,37 +53,41 @@ namespace ConsoleApplication.Algorithms
 			return bestLocalSearchMove;
 		}
 
-		private LocalSearchMove FindBestMove(IList<int> path, IGraph completeGraph)
+		private IMove FindBestMove(IList<int> path, IGraph completeGraph)
 		{
-			var bestVertice = FindBestVerticeFlip(path, completeGraph);
-		//	var bestEdge = FindBestEdgeFlip(path, completeGraph);
+			var bestVertice = FindBestNodeMove(path, completeGraph);
+			var bestEdge = FindBestEdgeMove(path, completeGraph);
 
-			//if (bestEdge.CostDifference > 0 && bestVertice.CostDifference > 0)
-			//	return default(LocalSearchMove);
+			if (bestEdge.CostImprovement > 0 && bestVertice.CostImprovement > 0)
+				return null;
 
-			return bestVertice; //bestEdge.CostDifference < bestVertice.CostDifference ? bestEdge : bestVertice;
+			return bestEdge.CostImprovement < bestVertice.CostImprovement ? bestEdge : bestVertice;
 		}
 
-		private LocalSearchMove FindBestVerticeFlip(IList<int> path, IGraph completeGraph)
+		private IMove FindBestNodeMove(IList<int> path, IGraph completeGraph)
 		{
-			var bestLocalSearchMove = new LocalSearchMove { Strategy = LocalSearchStrategy.Vertices };
-			for (var pointIndex = 1; pointIndex < (path.Count - 1); pointIndex++)
+			var bestLocalSearchMove = new NodeMove();
+			for (var pathIndex = 0; pathIndex < path.Count - 2; pathIndex++)
 			{
-				var indexBefore = path[pointIndex - 1];
-				var index = path[pointIndex];
-				var indexAfter = path[pointIndex + 1];
-				var currentCost = completeGraph.Weight(indexBefore, index) + completeGraph.Weight(index, indexAfter);
+				var previousNode = path[pathIndex];
+				var currentNode = path[pathIndex + 1];
+				var nextNode = path[pathIndex + 2];
+
+				var currentCost = completeGraph.Weight(previousNode, currentNode) + completeGraph.Weight(currentNode, nextNode);
+
 				var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
-				foreach (var node in unvisitedNodes)
+
+				foreach (var unvisitedNode in unvisitedNodes)
 				{
-					var newNode = node;
-					var newCost = completeGraph.Weight(indexBefore, newNode) + completeGraph.Weight(newNode, indexAfter);
-					var newCostDifference = newCost - currentCost;
-					if (newCost < currentCost && newCostDifference < bestLocalSearchMove.CostDifference)
+					var costFromUnvisited = completeGraph.Weight(previousNode, unvisitedNode) + completeGraph.Weight(unvisitedNode, nextNode);
+
+					var costDifference = costFromUnvisited - currentCost;
+
+					if (costFromUnvisited < currentCost && costDifference < bestLocalSearchMove.CostImprovement)
 					{
-						bestLocalSearchMove.CostDifference = newCostDifference;
-						bestLocalSearchMove.FirstPointIndex = pointIndex; // node you want to exclude from path
-						bestLocalSearchMove.SecondPointIndex = node; // node you want to add to path
+						bestLocalSearchMove.CostImprovement = costDifference;
+						bestLocalSearchMove.ExcludedNodePathIndex = pathIndex; // node you want to exclude from path
+						bestLocalSearchMove.NodeAfterMove = unvisitedNode; // node you want to add to path
 					}
 				}
 			}
@@ -122,9 +96,46 @@ namespace ConsoleApplication.Algorithms
 		}
 	}
 
-	internal enum LocalSearchStrategy
+	internal class EdgeMove : IMove
 	{
-		Vertices,
-		Edges
-	};
+		public int CostImprovement { get; set; }
+
+		public int FirstNodePathIndex { get; set; }
+
+		public int SecondNodePathIndex { get; set; }
+
+		public bool Move(List<int> path)
+		{
+			var distanceInPathSegments = SecondNodePathIndex - FirstNodePathIndex;
+
+			var firstSegment = path.GetRange(0, FirstNodePathIndex);
+
+			var secondSegment = path.GetRange(FirstNodePathIndex + 1, distanceInPathSegments);
+
+			var thirdSegment = path.GetRange(SecondNodePathIndex + 1, path.Count - firstSegment.Count - 1 - secondSegment.Count - 1);
+
+			secondSegment.Reverse();
+			path.Clear();
+			path.AddRange(firstSegment);
+			path.AddRange(secondSegment);
+			path.AddRange(thirdSegment);
+
+			return true;
+		}
+	}
+
+	internal class NodeMove : IMove
+	{
+		public int CostImprovement { get; set; }
+
+		public int ExcludedNodePathIndex { get; set; }
+
+		public int NodeAfterMove { get; set; }
+
+		public bool Move(List<int> path)
+		{
+			path[ExcludedNodePathIndex] = NodeAfterMove;
+			return true;
+		}
+	}
 }
