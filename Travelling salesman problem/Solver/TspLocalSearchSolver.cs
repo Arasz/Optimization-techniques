@@ -23,14 +23,14 @@ namespace ConsoleApplication.Solver
 
 			_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator);
 
-			var startNode = _initializationSolver.BestPath.First();
-
-			var localTime = TimeSpan.Zero;
-			int localResult;
 			foreach (var path in pathAccumulator.Paths)
 			{
 				var localPath = path.NodesList;
 				var context = SolvingTimeContext.Instance;
+
+				int localResult;
+				var startNode = path.NodesList.First();
+
 				using (context)
 					localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, localPath);
 				UpdateResults(localResult, localPath, context.Elapsed);
