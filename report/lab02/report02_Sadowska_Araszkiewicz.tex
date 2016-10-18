@@ -40,26 +40,26 @@ Sprawozdanie}
 \maketitle
 
 \section{Wprowadzenie}
-Celem ćwiczenia było zaimplementowanie algorytmów rozwiązujących problem Komiwojażera dla zbioru 100 punktów. Algorytmy te znaleźć miały najbardziej optymalną ścieżkę łączącą 50 dowolnych punktów grafu gdzie punktem startowym miał być każdy z punktów znajdujących się w zbiorze. Dane testowe zawarte są na \hyperref[http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/XML-TSPLIB/instances/kroA100.xml.zip]{stronie Uniwersytetu Heidelberg}. 
+Celem ćwiczenia było poprawienie wyników otrzymanych przez algorytmy Nearest Neighbour i Greedy Cycle poprzez zastosowanie lokalnego przeszukiwania. w wersji stromej Otrzymane wyniki porówanano z otrzymanymi po wyznaczeniu losowej ścieżki i nastepnie zastosowaniu lokalnego przeszukiwania.
 \section{Local search}
 \label{Local search}
-W algorytmie tym trasa budowana jest w taki 
+W algorytmie tym trasa budowana jest w taki sposób, że dla wygenerowanego wcześniej rozwiązania szukamy takiej pary wierzchołków lub pary krawędzi które po zamianie pozwolą na otrzymanie krótszej ścieżki. Następnie wykonujemy zamianę, która pozwoli na uzyskanie największego zysku. Kroki te należy powtarzać tak długo, jak mozliwe jest znalezienie takiej pary wierzchołków lub krawędzi których zamiana skróci scieżkę.
 \subsection{Implementacja w pseudokodzie}
 \begin{lstlisting}[frame=single]
 dopoki zmiana trasy zmniejsza jej koszt
 
 	dla kazdego z punktow na sciezce
-		koszt = koszt przejscia do punktu i z punktu
-		dla kazdego punktu spoza sciazki
-			nowyKoszt = koszt przejscia do nowego punktu i z punktu
-			jezeli nowyKoszt < najmniejszy z znalezionych nowych kosztow i nowyKoszt<koszt
-				minKoszt = nowyKoszt
+		staryKoszt = koszt przejscia do punktu + koszt przejscia z punktu do nastepnego
+		dla kazdego punktu spoza sciezki
+			nowyKoszt = koszt przejscia do nowego punktu + koszt przejscia z nowego punktu do nastepnego
+			jezeli nowyKoszt < minKoszt oraz nowyKoszt < staryKoszt
+				minKoszt = nowyKoszt 
 				
 	dla kazdej pary punktow na sciezce
 		dla kazdej kolejnej pary punktow na sciezce
-			koszt = koszt przejscia miedzy para nr 1 + koszt przejscia miedzy para nr 2
+			stayKoszt = koszt przejscia miedzy para nr 1 + koszt przejscia miedzy para nr 2
 			nowyKoszt = koszt przejscia miedzy pierwszymi punktami z kazdej z par + koszt przejscia miedzy drugimi punktami z kazdej z par
-			jezeli nowyKoszt < najmniejszy z znalezionych nowych kosztow i nowyKoszt<koszt
+			jezeli nowyKoszt < minKoszt oraz nowyKoszt < koszt
 				minKoszt = nowyKoszt			
 	
 	jezeli zysk z zamiany wierzcholkow jest wiekszy niz z zamiany krawedzi
@@ -73,13 +73,39 @@ koniec
 
 \end{lstlisting}
 \label{Local search code}
-\subsection{Wyniki}
-
+\section{Najlepsze ścieżki}
+\subsection{Nearest Neighbour + Local Search}
 %\begin{figure} [H]
 %\centering
 %\includegraphics[angle=0,width = 1\textwidth, height=!]{images/NN.png}
 %\caption{Najlepsza trasa - Nearest Neighbour}
 %\label{Rys. NN}
 %\end{figure}
+
+\subsection{Greedy Cycle + Local Search}
+
+\subsection{Nearest Neighbour Grasp + Local Search}
+
+\subsection{Greedy Cycle Grasp + Local Search}
+
+\section{Otrzymane wyniki}
+
+\begin{table}[H]
+\centering
+\caption{Otrzymane wyniki}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+             & NN + LS & GC + LS & NN Grasp + LS & GC Grasp + LS & Random + LS \\ \hline
+min cost     &         &         &               &               &             \\ \hline
+average cost &         &         &               &               &             \\ \hline
+max cost     &         &         &               &               &             \\ \hline
+best path    &         &         &               &               &             \\ \hline
+best time    &         &         &               &               &             \\ \hline
+average time &         &         &               &               &             \\ \hline
+worst time   &         &         &               &               &             \\ \hline
+\end{tabular}
+\end{table}
+
 
 \end{document}
