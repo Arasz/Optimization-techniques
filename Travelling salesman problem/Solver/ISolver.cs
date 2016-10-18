@@ -1,4 +1,5 @@
 using ConsoleApplication.Algorithms;
+using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Collections.Generic;
 
@@ -21,5 +22,7 @@ namespace ConsoleApplication.Solver
 		int WorstResult { get; }
 
 		void Solve(IAlgorithm tspSolvingAlgorithm);
+
+		void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator);
 	}
 }

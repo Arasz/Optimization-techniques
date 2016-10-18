@@ -1,70 +1,45 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
+using ConsoleApplication.Solver.SolverVisitor;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace ConsoleApplication.Solver
 {
-	public class TspLocalSearchSolver : ISolver
+	public class TspLocalSearchSolver : SolverBase
 	{
-		private readonly IGraph _completeGraph;
 		private readonly IAlgorithm _initializationAlgorithm;
 		private readonly ISolver _initializationSolver;
-		private SolvingTimeContext _solvingTimeContext;
-		public IList<int> BestPath { get; private set; }
 
-		public int BestResult { get; private set; }
-
-		public TimeSpan MaxSolvingTime { get; private set; }
-
-		public int MeanReasult { get; private set; }
-
-		public TimeSpan MeanSolvingTime { get; private set; }
-
-		public TimeSpan MinSolvingTime { get; private set; }
-
-		public int WorstResult { get; private set; }
-
-		public TspLocalSearchSolver(IGraph completeGraph, ISolver initializationSolver, IAlgorithm initializationAlgorithm)
+		public TspLocalSearchSolver(IGraph completeGraph, ISolver initializationSolver, IAlgorithm initializationAlgorithm) : base(completeGraph)
 		{
-			_completeGraph = completeGraph;
 			_initializationSolver = initializationSolver;
 			_initializationAlgorithm = initializationAlgorithm;
-			_solvingTimeContext = new SolvingTimeContext(new Stopwatch());
 		}
 
-		public void Solve(IAlgorithm tspSolvingAlgorithm)
+		public override void Solve(IAlgorithm tspSolvingAlgorithm)
 		{
-			_initializationSolver.Solve(_initializationAlgorithm);
+			var pathAccumulator = new PathAccumulator();
+
+			_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator);
 
 			var startNode = _initializationSolver.BestPath.First();
 
-			BestPath = _initializationSolver.BestPath;
-
-			using (_solvingTimeContext)
-				BestResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, BestPath);
-
-			MinSolvingTime = _solvingTimeContext.Elapsed;
+			var localTime = TimeSpan.Zero;
+			int localResult;
+			foreach (var path in pathAccumulator.Paths)
+			{
+				var localPath = path.NodesList;
+				var context = SolvingTimeContext.Instance;
+				using (context)
+					localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, localPath);
+				UpdateResults(localResult, localPath, context.Elapsed);
+			}
 		}
 
-		private class SolvingTimeContext : IDisposable
+		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
 		{
-			private readonly Stopwatch _stopwatch;
-
-			public TimeSpan Elapsed => _stopwatch.Elapsed;
-
-			public SolvingTimeContext(Stopwatch stopwatch)
-			{
-				_stopwatch = stopwatch;
-				_stopwatch.Start();
-			}
-
-			public void Dispose()
-			{
-				_stopwatch.Stop();
-			}
+			throw new NotImplementedException();
 		}
 	}
 }

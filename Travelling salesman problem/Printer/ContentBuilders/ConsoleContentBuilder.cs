@@ -21,7 +21,7 @@ namespace ConsoleApplication.Printer.ContentBuilders
 			builder.AppendLine(title + $"\tDate: {DateTime.Now}");
 			builder.AppendLine($"Min solving time: {_solver.MinSolvingTime.TotalMilliseconds} ms, " +
 							   $"Mean solving time: {_solver.MeanSolvingTime.TotalMilliseconds} ms, " +
-							   $"Max solving time: {_solver.MaxSolvingTime.TotalMilliseconds} ms, ");
+							   $"Max solving time: {_solver.MaxSolvingTime.TotalMilliseconds} ms , ");
 			builder.AppendLine($"Min cost: {_solver.BestResult}, Mean cost: {_solver.MeanReasult}," +
 							   $" Max cost: {_solver.WorstResult}");
 			builder.AppendLine($"Elements in path: {_solver.BestPath.Count()}");

@@ -40,6 +40,18 @@ namespace ConsoleApplication
 			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
 				"NN with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
 
+			localSearchSolver = new TspLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new EdgeFinder()));
+			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
+				"GC with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+
+			localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
+			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
+				"NN Grasp with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+
+			localSearchSolver = new TspLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
+			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
+				"GC GRASP with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+
 			//Console.ReadKey();
 		}
 
