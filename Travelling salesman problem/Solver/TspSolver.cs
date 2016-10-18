@@ -10,11 +10,17 @@ namespace ConsoleApplication.Solver
 	{
 		private readonly IGraph _completeGraph;
 
-		public IEnumerable<int> BestPath { get; private set; }
+		public IList<int> BestPath { get; private set; }
 
 		public int BestResult { get; private set; }
 
+		public TimeSpan MaxSolvingTime { get; }
+
 		public int MeanReasult { get; private set; }
+
+		public TimeSpan MeanSolvingTime { get; }
+
+		public TimeSpan MinSolvingTime { get; }
 
 		public IList<int> Results { get; } = new List<int>();
 
@@ -39,7 +45,7 @@ namespace ConsoleApplication.Solver
 			}
 		}
 
-		private void UpdateResults(int localResult, IEnumerable<int> path)
+		private void UpdateResults(int localResult, IList<int> path)
 		{
 			if (localResult < BestResult)
 			{

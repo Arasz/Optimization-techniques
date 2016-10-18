@@ -36,8 +36,9 @@ namespace ConsoleApplication
 
 			SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)), "GREEDY CYCLE GRASP", resultPrinter);
 
-			SolveAndPrint(new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder())), new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"NN with local search opt", resultPrinter);
+			var localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder()));
+			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
+				"NN with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
 
 			//Console.ReadKey();
 		}

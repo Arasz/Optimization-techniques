@@ -62,16 +62,15 @@ namespace ConsoleApplication.Algorithms
 
 		private LocalSearchMove FindBestEdgeFlip(IList<int> path, IGraph completeGraph)
 		{
-			LocalSearchMove bestLocalSearchMove = new LocalSearchMove();
-			bestLocalSearchMove.Strategy = LocalSearchStrategy.Edges;
+			var bestLocalSearchMove = new LocalSearchMove { Strategy = LocalSearchStrategy.Edges };
 
-			for (int i = 0; i < path.Count - 1; i++)
+			for (var i = 0; i < path.Count - 1; i++)
 			{
-				for (int j = i; j < path.Count - 1; j++)
+				for (var j = i; j < path.Count - 1; j++)
 				{
-					int currentCost = completeGraph.Weight(path[i], path[i + 1]) + completeGraph.Weight(path[j], path[j + 1]);
-					int newCost = completeGraph.Weight(path[i], path[j]) + completeGraph.Weight(path[i + 1], path[j + 1]);
-					int newCostDifference = newCost - currentCost;
+					var currentCost = completeGraph.Weight(path[i], path[i + 1]) + completeGraph.Weight(path[j], path[j + 1]);
+					var newCost = completeGraph.Weight(path[i], path[j]) + completeGraph.Weight(path[i + 1], path[j + 1]);
+					var newCostDifference = newCost - currentCost;
 					if (newCost < currentCost && bestLocalSearchMove.CostDifference < newCostDifference)
 					{
 						bestLocalSearchMove.CostDifference = newCostDifference;
@@ -86,38 +85,35 @@ namespace ConsoleApplication.Algorithms
 
 		private LocalSearchMove FindBestMove(IList<int> path, IGraph completeGraph)
 		{
-			LocalSearchMove bestVertice = FindBestVerticeFlip(path, completeGraph);
-			LocalSearchMove bestEdge = FindBestEdgeFlip(path, completeGraph);
+			var bestVertice = FindBestVerticeFlip(path, completeGraph);
+			var bestEdge = FindBestEdgeFlip(path, completeGraph);
 
 			if (bestEdge.CostDifference > 0 && bestVertice.CostDifference > 0)
-				return null;
+				return default(LocalSearchMove);
 
-			if (bestEdge.CostDifference < bestVertice.CostDifference)
-				return bestEdge;
-			return bestVertice;
+			return bestEdge.CostDifference < bestVertice.CostDifference ? bestEdge : bestVertice;
 		}
 
 		private LocalSearchMove FindBestVerticeFlip(IList<int> path, IGraph completeGraph)
 		{
-			LocalSearchMove bestLocalSearchMove = new LocalSearchMove();
-			bestLocalSearchMove.Strategy = LocalSearchStrategy.Vertices;
+			var bestLocalSearchMove = new LocalSearchMove { Strategy = LocalSearchStrategy.Vertices };
 			for (var pointIndex = 1; pointIndex < (path.Count - 1); pointIndex++)
 			{
-				int indexBefore = path[pointIndex - 1];
-				int index = path[pointIndex];
-				int indexAfter = path[pointIndex + 1];
-				int currentCost = completeGraph.Weight(indexBefore, index) + completeGraph.Weight(index, indexAfter);
+				var indexBefore = path[pointIndex - 1];
+				var index = path[pointIndex];
+				var indexAfter = path[pointIndex + 1];
+				var currentCost = completeGraph.Weight(indexBefore, index) + completeGraph.Weight(index, indexAfter);
 				var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
-				for (int i = 0; i < unvisitedNodes.Count; i++)
+				foreach (var node in unvisitedNodes)
 				{
-					int newNode = unvisitedNodes[i];
-					int newCost = completeGraph.Weight(indexBefore, newNode) + completeGraph.Weight(newNode, indexAfter);
-					int newCostDifference = newCost - currentCost;
+					var newNode = node;
+					var newCost = completeGraph.Weight(indexBefore, newNode) + completeGraph.Weight(newNode, indexAfter);
+					var newCostDifference = newCost - currentCost;
 					if (newCost < currentCost && bestLocalSearchMove.CostDifference < newCostDifference)
 					{
 						bestLocalSearchMove.CostDifference = newCostDifference;
 						bestLocalSearchMove.FirstPointIndex = pointIndex; // node you want to exclude from path
-						bestLocalSearchMove.SecondPointIndex = unvisitedNodes[i]; // node you want to add to path
+						bestLocalSearchMove.SecondPointIndex = node; // node you want to add to path
 					}
 				}
 			}

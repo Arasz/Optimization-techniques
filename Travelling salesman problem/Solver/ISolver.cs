@@ -1,18 +1,25 @@
-using System.Collections.Generic;
 using ConsoleApplication.Algorithms;
+using System;
+using System.Collections.Generic;
 
 namespace ConsoleApplication.Solver
 {
-    public interface ISolver
-    {
-        IEnumerable<int> BestPath { get; }
+	public interface ISolver
+	{
+		IList<int> BestPath { get; }
 
-        int BestResult { get; }
+		int BestResult { get; }
 
-        int MeanReasult { get; }
+		TimeSpan MaxSolvingTime { get; }
 
-        int WorstResult { get; }
+		int MeanReasult { get; }
 
-        void Solve(IAlgorithm tspSolvingAlgorithm);
-    }
+		TimeSpan MeanSolvingTime { get; }
+
+		TimeSpan MinSolvingTime { get; }
+
+		int WorstResult { get; }
+
+		void Solve(IAlgorithm tspSolvingAlgorithm);
+	}
 }
