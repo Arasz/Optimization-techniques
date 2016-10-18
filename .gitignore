@@ -215,4 +215,4 @@ __pycache__/
 *.out
 
 #Results
-**/*_result.txt
+**/*_results.txt
