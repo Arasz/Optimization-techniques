@@ -2,18 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConsoleApplication.Algorithms
+namespace ConsoleApplication.Algorithms.LocalSearch
 {
-    internal interface IMove
-    {
-        /// <summary>
-        /// Reprezentuje zysk jaki otrzymujemy po wykonaniu ruchu (zmniejszenie kosztu) 
-        /// </summary>
-        int CostImprovement { get; set; }
-
-        bool Move(List<int> path);
-    }
-
     public class LocalSearchAlgorithm : AlgorithmBase
     {
         public LocalSearchAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps, edgeFinder)
@@ -27,7 +17,7 @@ namespace ConsoleApplication.Algorithms
 
         }
 
-        private int CalculateCost(List<int> path, IGraph completeGraph)
+        protected int CalculateCost(List<int> path, IGraph completeGraph)
         {
             var cost = 0;
             for (int i = 0; i < path.Count - 1; i++)
@@ -37,7 +27,7 @@ namespace ConsoleApplication.Algorithms
             return cost;
         }
 
-        private IMove FindBestEdgeMove(IList<int> path, IGraph completeGraph)
+        protected IMove FindBestEdgeMove(IList<int> path, IGraph completeGraph)
         {
             var bestLocalSearchMove = new EdgeMove();
 
@@ -63,7 +53,7 @@ namespace ConsoleApplication.Algorithms
             return bestLocalSearchMove;
         }
 
-        private IMove FindBestMove(IList<int> path, IGraph completeGraph)
+        protected IMove FindBestMove(IList<int> path, IGraph completeGraph)
         {
             var bestVertice = FindBestNodeMove(path, completeGraph);
             var bestEdge = FindBestEdgeMove(path, completeGraph);
@@ -74,7 +64,7 @@ namespace ConsoleApplication.Algorithms
             return bestEdge.CostImprovement < bestVertice.CostImprovement ? bestEdge : bestVertice;
         }
 
-        private IMove FindBestNodeMove(IList<int> path, IGraph completeGraph)
+        protected IMove FindBestNodeMove(IList<int> path, IGraph completeGraph)
         {
             var bestLocalSearchMove = new NodeMove();
             for (var pathIndex = 0; pathIndex < path.Count - 2; pathIndex++)
@@ -103,49 +93,6 @@ namespace ConsoleApplication.Algorithms
             }
             //TODO - include path indexees groups: last, fist, second and one before last, last, first
             return bestLocalSearchMove;
-        }
-    }
-
-    internal class EdgeMove : IMove
-    {
-        public int CostImprovement { get; set; }
-
-        public int FirstNodePathIndex { get; set; }
-
-        public int SecondNodePathIndex { get; set; }
-
-        public bool Move(List<int> path)
-        {
-            var distanceInPathSegments = SecondNodePathIndex - FirstNodePathIndex;
-
-            var firstSegment = path.GetRange(0, FirstNodePathIndex + 1);
-
-            var secondSegment = path.GetRange(FirstNodePathIndex + 1, distanceInPathSegments);
-
-            var thirdSegment = path.GetRange(SecondNodePathIndex + 1, path.Count - SecondNodePathIndex - 1);
-
-            secondSegment.Reverse();
-            path.Clear();
-            path.AddRange(firstSegment);
-            path.AddRange(secondSegment);
-            path.AddRange(thirdSegment);
-
-            return true;
-        }
-    }
-
-    internal class NodeMove : IMove
-    {
-        public int CostImprovement { get; set; }
-
-        public int ExcludedNodePathIndex { get; set; }
-
-        public int NodeAfterMove { get; set; }
-
-        public bool Move(List<int> path)
-        {
-            path[ExcludedNodePathIndex] = NodeAfterMove;
-            return true;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ConsoleApplication.Algorithms;
+﻿using ConsoleApplication.Algorithms.LocalSearch;
+using ConsoleApplication.Algorithms;
 using ConsoleApplication.Configuration;
 using ConsoleApplication.Graphs;
 using ConsoleApplication.Printer;
@@ -78,7 +79,7 @@ namespace ConsoleApplication
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
 				"NN Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));
 
-			/*localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
+			localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
 			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
 				"GC Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));
@@ -86,7 +87,7 @@ namespace ConsoleApplication
 			localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
 			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"Random with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));*/
+				"Random with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));
         }
 
         private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver)

@@ -35,14 +35,14 @@ namespace ConsoleApplication.Solver
                 using (context)
                 {                
                     for(int j=0; j<InsideAlgorithmRepeatAmount; j++){
-			        foreach (var path in pathAccumulator.Paths)
-			        {
-				        var localPath = path.NodesList;
-				        int localResult;
+			            foreach (var path in pathAccumulator.Paths)
+			            {
+				            var localPath = path.NodesList;
+				            int localResult;
 
-					    localResult = tspSolvingAlgorithm.Solve(path.NodesList.First(), _completeGraph, localPath);
-				        UpdatePathResults(localResult, localPath);
-			        }
+					        localResult = tspSolvingAlgorithm.Solve(path.NodesList.First(), _completeGraph, localPath);
+				            UpdatePathResults(localResult, localPath);
+			            }
                     }
                 }
                 UpdateTimeMeasures(context.Elapsed);
