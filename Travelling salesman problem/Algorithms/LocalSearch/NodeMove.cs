@@ -8,11 +8,24 @@ namespace ConsoleApplication.Algorithms.LocalSearch
 
         public int ExcludedNodePathIndex { get; set; }
 
+        private int ExcludedNodeValue { get; set; }
+
         public int NodeAfterMove { get; set; }
 
         public bool Move(List<int> path)
         {
+            ExcludedNodeValue = path[ExcludedNodePathIndex];
             path[ExcludedNodePathIndex] = NodeAfterMove;
+            ExcludedNodeValue = -1;
+            return true;
+        }
+
+        public bool Undo(List<int> path)
+        {
+            if(ExcludedNodeValue < 0)
+                return false;
+                
+            path[ExcludedNodePathIndex] = ExcludedNodeValue;
             return true;
         }
     }

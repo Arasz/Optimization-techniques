@@ -2,12 +2,14 @@ using ConsoleApplication.Graphs;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace ConsoleApplication.Algorithms.LocalSearch
 {
     public class IteratedLocalSearchAlgorithm : LocalSearchAlgorithm
     {
         private Random _randomGenerator;
+        private long AlgorithmSolveTimeMs = 200;
 
         private int PerturbanceLength = 2;
         public IteratedLocalSearchAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps, edgeFinder)
@@ -17,25 +19,36 @@ namespace ConsoleApplication.Algorithms.LocalSearch
 
         public override int Solve(int startNode, IGraph completeGraph, List<int> path)
         {
-            
-            var perturbance = generatePerturbance(path, completeGraph);
-            foreach(IMove move in perturbance){
+            var timer = new Stopwatch();
+            timer.Start();
+            while(timer.Elapsed.Milliseconds < AlgorithmSolveTimeMs){
+
+            var CostImprovement = 0;
+            var perturbance = new List<IMove>();
+            for(int i=0; i<PerturbanceLength; i++){
+                IMove move = getRandomMove(path, completeGraph);
                 move.Move(path);
+                perturbance.Add(move);
+                CostImprovement += move.CostImprovement;
             }
             var bestMove = FindBestMove(path, completeGraph);
-            bestMove.Move(path);
+            if(bestMove != null){
+                bestMove.Move(path);
+                CostImprovement += bestMove.CostImprovement;
+            }
 
+            if(CostImprovement > 0){
+                if(bestMove!= null){
+                    bestMove.Undo(path);
+                }
+                for(int i = perturbance.Count-1 ; i >= 0 ; i--)
+                {
+                    perturbance[i].Undo(path);
+                }
+            }
+            }
             return CalculateCost(path, completeGraph);
 
-        }
-
-        private List<IMove> generatePerturbance(List<int> path, IGraph completeGraph)
-        {
-            List<IMove> perturbance = new List<IMove>();
-            for(int i=0; i<PerturbanceLength; i++){
-                perturbance.Add(getRandomMove(path, completeGraph));
-            }
-            return perturbance;
         }
 
         private IMove getRandomMove(List<int> path, IGraph completeGraph)
@@ -51,9 +64,9 @@ namespace ConsoleApplication.Algorithms.LocalSearch
         {
             NodeMove nodeMove = new NodeMove();
             var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
-            var excludedNodeIndex = _randomGenerator.Next(1, path.Count);
-            var NodeAfterMove = _randomGenerator.Next(1, unvisitedNodes.Count);
-            nodeMove.ExcludedNodePathIndex = path[excludedNodeIndex];
+            var excludedNodeIndex = _randomGenerator.Next(1, path.Count-1);
+            var NodeAfterMove = _randomGenerator.Next(1, unvisitedNodes.Count-1);
+            nodeMove.ExcludedNodePathIndex = excludedNodeIndex;
             nodeMove.NodeAfterMove = unvisitedNodes[NodeAfterMove];
             
             var currentCost = completeGraph.Weight(path[excludedNodeIndex - 1], nodeMove.ExcludedNodePathIndex) + completeGraph.Weight(nodeMove.ExcludedNodePathIndex, path[excludedNodeIndex + 1]);

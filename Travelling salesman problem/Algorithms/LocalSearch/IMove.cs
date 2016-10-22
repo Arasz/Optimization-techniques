@@ -10,5 +10,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
         int CostImprovement { get; set; }
 
         bool Move(List<int> path);
+
+        bool Undo(List<int> path);
     }
 }

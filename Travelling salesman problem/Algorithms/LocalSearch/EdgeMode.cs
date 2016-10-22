@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 namespace ConsoleApplication.Algorithms.LocalSearch
@@ -28,6 +29,11 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             path.AddRange(thirdSegment);
 
             return true;
+        }
+
+        public bool Undo(List<int> path)
+        {
+            return Move(path);
         }
     }
 }

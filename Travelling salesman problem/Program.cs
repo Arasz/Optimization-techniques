@@ -33,10 +33,20 @@ namespace ConsoleApplication
 
 			//RunAlgorithmsWithLocalSearch(graph, solver);
 
-			RunMSLSAlgorithms(graph, solver);
+			//RunMSLSAlgorithms(graph, solver);
+
+			RunILSAlgorithm(graph, solver);
 
 			
 		}
+
+        private static void RunILSAlgorithm(IGraph graph, TspSolver solver)
+        {
+            var localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
+			var localSearchAlgorithm = new IteratedLocalSearchAlgorithm(Steps, new EdgeFinder());
+			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
+				"NN Grasp with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver));
+        }
 
         private static void RunBasicAlgorithms(TspSolver solver, IResultPrinter resultPrinter)
         {
