@@ -30,5 +30,11 @@ namespace ConsoleApplication.Algorithms
             var index = _randomGenerator.Next(0, _restrictedCandidateListSize);
             return restrictedCandidateList.ElementAt(index);
         }
+
+        public Edge RandomNodeEdge(IEnumerable<Edge> edges, IEnumerable<int> unvisitedNodes, Random randomGenerator)
+        {
+             var unvisitedEdges = edges.Where(edge => unvisitedNodes.Contains(edge.TargetNode));
+			 return unvisitedEdges.ElementAt(randomGenerator.Next(0, unvisitedEdges.Count()));
+        }
     }
 }

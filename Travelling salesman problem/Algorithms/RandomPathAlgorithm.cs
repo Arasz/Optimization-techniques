@@ -17,8 +17,6 @@ namespace ConsoleApplication.Algorithms
 		{
             
         	var iterator = completeGraph.Iterator;
-			int size = completeGraph.NodesCount;
-
 			var pathCost = 0;
 
 			path.Add(startNode);
@@ -27,7 +25,7 @@ namespace ConsoleApplication.Algorithms
 
 			while (--steps > 0)
 			{
-				var edgeToNearestNode = getRandomEdge(iterator.Edges, unvisitedNodes);
+				var edgeToNearestNode = _edgeFinder.RandomNodeEdge(iterator.Edges, unvisitedNodes, _randomGenerator);
 
 				pathCost += edgeToNearestNode.Weight;
 
@@ -42,12 +40,6 @@ namespace ConsoleApplication.Algorithms
 			path.Add(startNode);
 
 			return pathCost;
-		}
-
-	 	public Edge getRandomEdge(IEnumerable<Edge> edges, IEnumerable<int> unvisitedNodes){
-			 var unvisitedEdges = edges.Where(edge => unvisitedNodes.Contains(edge.TargetNode));
-			 int index = _randomGenerator.Next(0, unvisitedEdges.Count());
-			 return unvisitedEdges.ElementAt(index);
 		}
                                 
 	}
