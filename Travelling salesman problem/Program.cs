@@ -28,6 +28,15 @@ namespace ConsoleApplication
 				.AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(solver))
 				.AddPrinter(new FilePrinter($"{DateTime.Now.Date.ToFileTime()}_results.txt"), new FileContentBuilder(solver, coordinatesPath));
 
+			RunBasicAlgorithms(solver, resultPrinter);
+
+			RunAlgorithmsWithLocalSearch(graph, solver);
+
+			
+		}
+
+        private static void RunBasicAlgorithms(TspSolver solver, IResultPrinter resultPrinter)
+        {
 			SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder()), "NEAREST NEIGHBOR", resultPrinter);
 
 			SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, new EdgeFinder()), "GREEDY CYCLE", resultPrinter);
@@ -35,32 +44,37 @@ namespace ConsoleApplication
 			SolveAndPrint(solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)), "NEAREST NEIGHBOR GRASP", resultPrinter);
 
 			SolveAndPrint(solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)), "GREEDY CYCLE GRASP", resultPrinter);
+        }
 
-			var localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder()));
+		private static void RunAlgorithmsWithLocalSearch(IGraph graph, TspSolver solver)
+        {
+            var localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder()));
 			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"NN WITH LOCAL SEARCH", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+				"NN WITH LOCAL SEARCH", getLocalSearchResultPrinter(localSearchSolver));
 
 			localSearchSolver = new TspLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new EdgeFinder()));
 			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"GC with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+				"GC with local search opt", getLocalSearchResultPrinter(localSearchSolver));
 
 			localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
 			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"NN Grasp with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+				"NN Grasp with local search opt", getLocalSearchResultPrinter(localSearchSolver));
 
 			localSearchSolver = new TspLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
 			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"GC GRASP with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)).AddPrinter(new FilePrinter($"{DateTime.Now.Date.ToFileTime()}_results.txt"), new FileContentBuilder(localSearchSolver, coordinatesPath)));
+				"GC GRASP with local search opt", getLocalSearchResultPrinter(localSearchSolver));
 
 			localSearchSolver = new TspLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
 			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"RANDOM with local search opt", new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver)));
+				"RANDOM with local search opt", getLocalSearchResultPrinter(localSearchSolver));
+        }
 
+        private static IResultPrinter getLocalSearchResultPrinter(TspLocalSearchSolver localSearchSolver)
+        {
+            return new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver));
+        }
 
-			//Console.ReadKey();
-		}
-
-		private static IConfigurationRoot BuildConfiguration() => new ConfigurationBuilder()
+        private static IConfigurationRoot BuildConfiguration() => new ConfigurationBuilder()
 			.SetBasePath(Directory.GetCurrentDirectory())
 			.AddJsonFile("config.json")
 			.Build();
