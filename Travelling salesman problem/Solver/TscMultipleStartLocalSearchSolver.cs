@@ -27,21 +27,23 @@ namespace ConsoleApplication.Solver
 		public override void Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 			var pathAccumulator = new PathAccumulator();
-            var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
-			_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
-
-            var context = SolvingTimeContext.Instance;
             for(int i=0; i<MSLSRepeatAmount; i++){
-                for(int j=0; j<InsideAlgorithmRepeatAmount; j++){
+                
+                var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
+                _initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
+                var context = SolvingTimeContext.Instance;
+                using (context)
+                {                
+                    for(int j=0; j<InsideAlgorithmRepeatAmount; j++){
 			        foreach (var path in pathAccumulator.Paths)
 			        {
 				        var localPath = path.NodesList;
 				        int localResult;
 
-				        using (context)
-					        localResult = tspSolvingAlgorithm.Solve(path.NodesList.First(), _completeGraph, localPath);
+					    localResult = tspSolvingAlgorithm.Solve(path.NodesList.First(), _completeGraph, localPath);
 				        UpdatePathResults(localResult, localPath);
 			        }
+                    }
                 }
                 UpdateTimeMeasures(context.Elapsed);
             }

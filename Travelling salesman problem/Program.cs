@@ -77,6 +77,16 @@ namespace ConsoleApplication
 			var localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
 				"NN Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));
+
+			/*localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
+			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
+			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
+				"GC Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));
+
+			localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
+			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
+			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
+				"Random with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));*/
         }
 
         private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver)
