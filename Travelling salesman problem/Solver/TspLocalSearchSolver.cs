@@ -41,5 +41,10 @@ namespace ConsoleApplication.Solver
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -28,9 +28,11 @@ namespace ConsoleApplication
 				.AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(solver))
 				.AddPrinter(new FilePrinter($"{DateTime.Now.Date.ToFileTime()}_results.txt"), new FileContentBuilder(solver, coordinatesPath));
 
-			RunBasicAlgorithms(solver, resultPrinter);
+			//RunBasicAlgorithms(solver, resultPrinter);
 
-			RunAlgorithmsWithLocalSearch(graph, solver);
+			//RunAlgorithmsWithLocalSearch(graph, solver);
+
+			RunMSLSAlgorithms(graph, solver);
 
 			
 		}
@@ -69,7 +71,15 @@ namespace ConsoleApplication
 				"RANDOM with local search opt", getLocalSearchResultPrinter(localSearchSolver));
         }
 
-        private static IResultPrinter getLocalSearchResultPrinter(TspLocalSearchSolver localSearchSolver)
+		private static void RunMSLSAlgorithms(IGraph graph, TspSolver solver)
+        {
+			var localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
+			var localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
+			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
+				"NN Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver));
+        }
+
+        private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver)
         {
             return new ResultPrinter().AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver));
         }

@@ -14,20 +14,22 @@ namespace ConsoleApplication.Solver
 
 		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
 		{
-			BestResult = int.MaxValue;
-			WorstResult = int.MinValue;
-
 			for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
 			{
-				var path = new List<int>();
-				int localResult;
-				//TODO: pass steps in ctr
-				var context = SolvingTimeContext.Instance;
-				using (context)
-					localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, path);
-				UpdateResults(localResult, path, context.Elapsed);
-				pathAccumulator.AddPath(new Path(path.ToList(), localResult));
+				Solve(tspSolvingAlgorithm, pathAccumulator, startNode);
 			}
+		}
+
+		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
+		{
+			var path = new List<int>();
+			int localResult;
+			//TODO: pass steps in ctr
+			var context = SolvingTimeContext.Instance;
+			using (context)
+			localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, path);
+			UpdateResults(localResult, path, context.Elapsed);
+			pathAccumulator.AddPath(new Path(path.ToList(), localResult));
 		}
 	}
 }

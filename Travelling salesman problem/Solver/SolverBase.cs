@@ -37,9 +37,20 @@ namespace ConsoleApplication.Solver
 
 		public virtual void Solve(IAlgorithm tspSolvingAlgorithm) => Solve(tspSolvingAlgorithm, new NullPathAccumulator());
 
+		public virtual void Solve(IAlgorithm tspSolvingAlgorithm, int startNode) => Solve(tspSolvingAlgorithm, new NullPathAccumulator(), startNode);
+
 		public abstract void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator);
 
+		public abstract void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode);
+
+
 		protected virtual void UpdateResults(int localResult, IList<int> path, TimeSpan localTime)
+		{
+			UpdatePathResults(localResult, path);
+			UpdateTimeMeasures(localTime);
+
+		}
+		protected virtual void UpdatePathResults(int localResult, IList<int> path)
 		{
 			if (localResult < BestResult)
 			{
@@ -50,6 +61,12 @@ namespace ConsoleApplication.Solver
 			if (localResult > WorstResult)
 				WorstResult = localResult;
 
+			Results.Add(localResult);
+			MeanReasult = (int)Math.Round(Results.Average());
+		}
+
+		protected virtual void UpdateTimeMeasures(TimeSpan localTime)
+		{
 			if (localTime < MinSolvingTime)
 				MinSolvingTime = localTime;
 
@@ -58,9 +75,6 @@ namespace ConsoleApplication.Solver
 
 			TimeResults.Add(localTime);
 			MeanSolvingTime = new TimeSpan((long)TimeResults.Average(span => span.Ticks));
-
-			Results.Add(localResult);
-			MeanReasult = (int)Math.Round(Results.Average());
 		}
 
 		protected class SolvingTimeContext : IDisposable
