@@ -9,7 +9,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
     public class IteratedLocalSearchAlgorithm : LocalSearchAlgorithm
     {
         private Random _randomGenerator;
-        private long AlgorithmSolveTimeMs = 200;
+        private long AlgorithmSolveTimeMs = 1200;
 
         private int PerturbanceLength = 2;
         public IteratedLocalSearchAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps, edgeFinder)
@@ -21,31 +21,30 @@ namespace ConsoleApplication.Algorithms.LocalSearch
         {
             var timer = new Stopwatch();
             timer.Start();
-            while(timer.Elapsed.Milliseconds < AlgorithmSolveTimeMs){
+            int cost = CalculateCost(path, completeGraph);
+            List<int> pathBeforeMoves = path;
+            while(timer.ElapsedMilliseconds < AlgorithmSolveTimeMs){
 
-            var CostImprovement = 0;
-            var perturbance = new List<IMove>();
-            for(int i=0; i<PerturbanceLength; i++){
-                IMove move = getRandomMove(path, completeGraph);
-                move.Move(path);
-                perturbance.Add(move);
-                CostImprovement += move.CostImprovement;
-            }
-            var bestMove = FindBestMove(path, completeGraph);
-            if(bestMove != null){
-                bestMove.Move(path);
-                CostImprovement += bestMove.CostImprovement;
-            }
+                pathBeforeMoves = new List<int>(path);
+                var perturbance = new List<IMove>();
+                for(int i=0; i<PerturbanceLength; i++){
+                    IMove move = getRandomMove(path, completeGraph);
+                    move.Move(path);
+                    perturbance.Add(move);
+                }
+                var bestMove = FindBestMove(path, completeGraph);
+                if(bestMove != null){
+                    bestMove.Move(path);
+                }
 
-            if(CostImprovement > 0){
-                if(bestMove!= null){
-                    bestMove.Undo(path);
+                var newCost = CalculateCost(path, completeGraph);
+                if(newCost > cost){
+                    path = new List<int>(pathBeforeMoves); //undo moves
                 }
-                for(int i = perturbance.Count-1 ; i >= 0 ; i--)
-                {
-                    perturbance[i].Undo(path);
+                else{
+                    cost = newCost;
                 }
-            }
+                
             }
             return CalculateCost(path, completeGraph);
 
@@ -69,7 +68,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             nodeMove.ExcludedNodePathIndex = excludedNodeIndex;
             nodeMove.NodeAfterMove = unvisitedNodes[NodeAfterMove];
             
-            var currentCost = completeGraph.Weight(path[excludedNodeIndex - 1], nodeMove.ExcludedNodePathIndex) + completeGraph.Weight(nodeMove.ExcludedNodePathIndex, path[excludedNodeIndex + 1]);
+            var currentCost = completeGraph.Weight(path[excludedNodeIndex - 1], path[excludedNodeIndex]) + completeGraph.Weight(path[excludedNodeIndex], path[excludedNodeIndex + 1]);
             var costFromUnvisited = completeGraph.Weight(path[excludedNodeIndex - 1], nodeMove.NodeAfterMove) + completeGraph.Weight(nodeMove.NodeAfterMove, path[excludedNodeIndex + 1]);
             
             nodeMove.CostImprovement = costFromUnvisited - currentCost;
