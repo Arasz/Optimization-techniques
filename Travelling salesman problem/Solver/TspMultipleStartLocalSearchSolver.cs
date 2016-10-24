@@ -3,6 +3,7 @@ using ConsoleApplication.Graphs;
 using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ConsoleApplication.Solver
 {
@@ -26,26 +27,31 @@ namespace ConsoleApplication.Solver
 
 		public override void Solve(IAlgorithm tspSolvingAlgorithm)
 		{
-			var pathAccumulator = new PathAccumulator();
-            for(int i=0; i<MSLSRepeatAmount; i++){
-                var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
-                _initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
-            }
-				             
-            foreach (var path in pathAccumulator.Paths){
-				var context = SolvingTimeContext.Instance;  
-				using(context){
-					for(int j=0; j<InsideAlgorithmRepeatAmount; j++)
-			        {
-				        var localPath = path.NodesList;
-				        int localResult;
+			var context = SolvingTimeContext.Instance;  
 
-					    localResult = tspSolvingAlgorithm.Solve(path.NodesList.First(), _completeGraph, localPath);
-				        UpdatePathResults(localResult, localPath);
-			        }
+			int bestResult = Int32.MaxValue;
+			var bestPath = new List<int>();
+			for(int i=0; i<MSLSRepeatAmount; i++)
+			{
+				using(context)
+				{
+					for(int j=0; j<InsideAlgorithmRepeatAmount; j++)
+			    	{
+						var pathAccumulator = new PathAccumulator();
+						var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
+                		_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
+						var accumulatedPath = pathAccumulator.Paths[0];
+				    	var localPath = accumulatedPath.NodesList;
+						var localResult = tspSolvingAlgorithm.Solve(localPath.First(), _completeGraph, localPath);
+						if(localResult < bestResult){
+							bestResult = localResult;
+							bestPath = localPath;
+						}
+			    	}
+					UpdatePathResults(bestResult, bestPath);
+					UpdateTimeMeasures(context.Elapsed);
 				}
-				UpdateTimeMeasures(context.Elapsed);
-            }
+			}
 		}
 
 		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)

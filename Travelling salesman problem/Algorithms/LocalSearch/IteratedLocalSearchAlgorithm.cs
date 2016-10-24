@@ -9,7 +9,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
     public class IteratedLocalSearchAlgorithm : LocalSearchAlgorithm
     {
         private Random _randomGenerator;
-        private long AlgorithmSolveTimeMs = 1200;
+        private long AlgorithmSolveTimeMs = 8000;
 
         private int PerturbanceLength = 2;
         public IteratedLocalSearchAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps, edgeFinder)
@@ -22,26 +22,23 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             var timer = new Stopwatch();
             timer.Start();
             int cost = CalculateCost(path, completeGraph);
-            List<int> pathBeforeMoves = path;
             while(timer.ElapsedMilliseconds < AlgorithmSolveTimeMs){
 
-                pathBeforeMoves = new List<int>(path);
+                var newPath = new List<int>(path);
                 var perturbance = new List<IMove>();
                 for(int i=0; i<PerturbanceLength; i++){
-                    IMove move = getRandomMove(path, completeGraph);
-                    move.Move(path);
+                    IMove move = getRandomMove(newPath, completeGraph);
+                    move.Move(newPath);
                     perturbance.Add(move);
                 }
-                var bestMove = FindBestMove(path, completeGraph);
+                var bestMove = FindBestMove(newPath, completeGraph);
                 if(bestMove != null){
-                    bestMove.Move(path);
+                    bestMove.Move(newPath);
                 }
 
-                var newCost = CalculateCost(path, completeGraph);
-                if(newCost > cost){
-                    path = new List<int>(pathBeforeMoves); //undo moves
-                }
-                else{
+                var newCost = CalculateCost(newPath, completeGraph);
+                if(newCost < cost){
+                    path = newPath;
                     cost = newCost;
                 }
                 

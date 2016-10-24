@@ -1,0 +1,202 @@
+\documentclass[a4paper 10pt]{article}
+\usepackage[english,polish]{babel}
+\usepackage[MeX]{polski}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{subfigure}
+\usepackage{dashrule}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\hypersetup{ hidelinks = true, } 
+\lstset{
+    frame=single,
+    breaklines=true,
+    postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}
+}
+
+
+\renewcommand{\rmdefault}{ptm}
+  
+\frenchspacing
+
+% Used to add additional dot in enumerations
+\usepackage{titlesec}
+\titlelabel{\thetitle.\quad}
+\title{\textbf{Techniki Optymalizacji} \\
+Laboratorium nr 3 \\
+Sprawozdanie}
+\author{Paulina Sadowska, Rafał Araszkiewicz}
+\begin{document}
+\maketitle
+
+\section{Wprowadzenie}
+Celem ćwiczenia było poprawienie wyników otrzymanych na ostatnich zajeciach  laboratoryjnych poprzez zastosowanie Multiple Start Local Search (Lokalne przeszukiwanie z różnych punktów startowych) oraz Iterated Local Search (Iteracyjne Przeszukiwanie Lokalne).
+\section{Multiple Start Local search}
+\label{Multiple Start Local search}
+\subsection{Implementacja w pseudokodzie}
+\begin{lstlisting}[frame=single]
+powtorz 10 razy
+	powtorz 1000 razy
+		wygeneruj rozwiazania algorytmu NNG GCG lub Random dla losowego punktu startowego
+		wykonaj Local Search
+		jezeli wygenerowana trasa jest lepsza niz dotychczasowa najlepsza trasa
+			bestPath = newPath;
+	koniec
+	dodaj bestPath do tabeli wynikow
+koniec
+
+\end{lstlisting}
+
+\section{Iterated Local search}
+\label{Iterated Local search}
+Za preturbacje przyjęto złożenie dwóch zmian par wierzchołków, dwóch zmian par krawędzi, lub zmianę jednej pary wierzchołków i jednej pary krawędzi.
+\subsection{Implementacja w pseudokodzie}
+\begin{lstlisting}[frame=single]
+wykonaj 10 razy
+	wygeneruj rozwiazania algorytmu NNG GCG lub Random dla losowego punktu startowego
+		dopoki nie uplynie zadany czas
+			perturbancja = zlozenie dwoch zniam wierzcholkow lub krawedzi
+			wykonaj perturbacje
+			znajdz najlepszy ruch zgodnie z algorytmem Local Search
+			wykonaj ruch
+			
+			jezeli koszt trasy po wykonaniu perturbacji i ruchu znalezionego przez LS jest wiekszy niz koszt sprzed ruchow
+				przywroc poprzednia trase
+		koniec
+koniec
+\end{lstlisting}
+
+\section{Najlepsze ścieżki}
+\subsection{Nearest Neighbour Grasp + Multiple Start Local Search}
+Najlepsza trasa: 0, 62, 5, 48, 74, 96, 3, 64, 65, 69, 21, 15, 87, 78, 17, 23, 37, 35, 83, 9, 71, 20, 73, 58, 16, 14, 10, 31, 44, 90, 97, 22, 76, 59, 61, 34, 85, 26, 11, 19, 6, 8, 56, 86, 50, 24, 60, 57, 27, 92, 0 
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 1\textwidth, height=!]{images/NNG_MSLS.png}
+\caption{Najlepsza trasa - Nearest Neighbour Grasp + Local Search}
+\label{Rys. NN}
+\end{figure}
+
+\newpage
+\subsection{Greedy Cycle Grasp + Multiple Start Local Search}
+Najlepsza trasa: 59, 61, 34, 85, 26, 11, 19, 6, 8, 56, 86, 50, 24, 80, 60, 57, 66, 27, 92, 0, 91, 7, 55, 96, 18, 52, 87, 15, 69, 21, 93, 17, 23, 37, 83, 9, 89, 48, 5, 62, 46, 10, 16, 14, 31, 44, 90, 97, 22, 76, 59 
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 1\textwidth, height=!]{images/GCG_MSLS.png}
+\caption{Najlepsza trasa - Greedy Cycle Grasp + Local Search}
+\label{Rys. NN}
+\end{figure}
+\newpage
+\subsection{Random + Multiple Start Local Search}
+Najlepsza trasa: 60, 57, 27, 92, 0, 62, 5, 48, 74, 18, 52, 87, 15, 21, 93, 78, 17, 23, 37, 35, 71, 20, 73, 16, 14, 10, 31, 44, 90, 97, 22, 59, 61, 85, 26, 11, 19, 56, 8, 6, 54, 82, 33, 45, 28, 29, 38, 84, 80, 24, 60 
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 1\textwidth, height=!]{images/Random_MSLS.png}
+\caption{Najlepsza trasa - Random + Local Search}
+\label{Rys. NN}
+\end{figure}
+
+\newpage
+\section{Nearest Neighbour Grasp + Iterated Local Search}
+Najlepsza trasa: 41, 79, 55, 96, 18, 74, 48, 5, 91, 7, 0, 94, 92, 66, 60, 24, 86, 8, 6, 11, 19, 26, 54, 82, 56, 85, 34, 61, 76, 59, 97, 22, 44, 90, 31, 16, 14, 10, 20, 71, 9, 89, 62, 78, 17, 93, 21, 87, 52, 15, 41 
+
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 1\textwidth, height=!]{images/NNG_ILS.png}
+\caption{Najlepsza trasa - Nearest Neighbour Grasp + Iterated Local Search}
+\label{Rys. NN}
+\end{figure}
+
+\newpage
+\section{Greedy Cycle Grasp + Iterated Local Search}
+Najlepsza trasa: 12
+36
+4 
+51
+77
+95
+29
+38
+84
+67
+72
+49
+43
+80
+24
+8 
+6 
+33
+82
+54
+11
+26
+34
+85
+61
+59
+22
+44
+31
+90
+97
+76
+19
+56
+86
+50
+60
+57
+92
+23
+66
+68
+63
+39
+53
+1 
+81
+94
+75
+32
+12
+
+\begin{figure} [H]
+\centering
+\includegraphics[angle=0,width = 1\textwidth, height=!]{images/GCG_ILS.png}
+\caption{Najlepsza trasa - Greedy Cycle Grasp + Iterated Local Search}
+\label{Rys. NN}
+\end{figure}
+
+\newpage
+\section{Random + Iterated Local Search}
+Najlepsza trasa: 
+
+\newpage
+\section{Otrzymane wyniki}
+\begin{table}[H]
+\centering
+\caption{Otrzymane wyniki}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+             & NNG + MSLS & GCG + MSLS & Random + MSLS & NNG + ILS & GCG + ILS & Random + ILS \\ \hline
+min cost     & 9510 & 11548 & 10189 & 9821 & 11737 &  \\ \hline
+average cost & 9525 & 10549 & 10301 & 10897 & 12262 &  \\ \hline
+max cost     & 9664 & 10551 & 10375 & 11399 & 12818 &  \\ \hline
+best time    & 36.4s & 10.1s & 52.6s & 41.1s & 11.1s & 61.1s \\ \hline
+average time & 41.1s & 11.1s & 61.1s & 41.1s & 11.1s & 61.1s \\ \hline
+worst time   & 46.2s & 11.9s & 69.8s & 41.2s & 11.1s & 61.1s \\ \hline 
+\end{tabular}
+\end{table}
+\end{document}
+\\

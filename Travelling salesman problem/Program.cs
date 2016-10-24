@@ -28,7 +28,7 @@ namespace ConsoleApplication
 
 			//RunAlgorithmsWithLocalSearch(graph, solver, coordinatesPath);
 
-			RunMSLSAlgorithms(graph, solver, coordinatesPath);
+			//RunMSLSAlgorithms(graph, solver, coordinatesPath);
 
 			RunILSAlgorithm(graph, solver, coordinatesPath);
 
@@ -99,15 +99,15 @@ namespace ConsoleApplication
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
 				"NN Grasp with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "NNG_ILS", coordinatesPath));
 
-			localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
+			/*localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
 			localSearchAlgorithm = new IteratedLocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
 				"GC Grasp with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "GCG_ILS", coordinatesPath));
 
-			localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
-			localSearchAlgorithm = new IteratedLocalSearchAlgorithm(Steps, new EdgeFinder());
+			/*var localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
+			var localSearchAlgorithm = new IteratedLocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"Random with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "Random_ILS", coordinatesPath));
+				"Random with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "Random_ILS", coordinatesPath));*/
         }
 
 		private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver, string algorithmName, string coordinatesPath)
