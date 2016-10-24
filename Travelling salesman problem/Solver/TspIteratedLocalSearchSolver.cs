@@ -14,7 +14,7 @@ namespace ConsoleApplication.Solver
 		private readonly IAlgorithm _initializationAlgorithm;
 		private readonly ISolver _initializationSolver;
 
-		private const long AlgorithmSolveTimeMs = 400;
+		private const long AlgorithmSolveTimeMs = 4100;
 
         private const int PerturbanceLength = 2;
 
