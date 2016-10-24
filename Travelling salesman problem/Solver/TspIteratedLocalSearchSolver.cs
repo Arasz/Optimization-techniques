@@ -12,7 +12,7 @@ namespace ConsoleApplication.Solver
 		private readonly IAlgorithm _initializationAlgorithm;
 		private readonly ISolver _initializationSolver;
 
-        private int ILSRepeatAmount = 4;
+        private int ILSRepeatAmount = 10;
 
         private Random _randomGenerator;
 
