@@ -12,7 +12,9 @@ namespace ConsoleApplication.Algorithms.LocalSearch
 
         public override int Solve(int startNode, IGraph completeGraph, List<int> path)
         {
-            while (FindBestMove(path, completeGraph)?.Move(path) ?? false) ;
+            while (FindBestMove(path, completeGraph)?.Move(path) ?? false)
+            {
+            }
             return CalculateCost(path, completeGraph);
 
         }
@@ -27,7 +29,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             return cost;
         }
 
-        protected IMove FindBestEdgeMove(IList<int> path, IGraph completeGraph)
+        private IMove FindBestEdgeMove(IList<int> path, IGraph completeGraph)
         {
             var bestLocalSearchMove = new EdgeMove();
 
@@ -64,7 +66,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             return bestEdge.CostImprovement < bestVertice.CostImprovement ? bestEdge : bestVertice;
         }
 
-        protected IMove FindBestNodeMove(IList<int> path, IGraph completeGraph)
+        private static IMove FindBestNodeMove(IList<int> path, IGraph completeGraph)
         {
             var bestLocalSearchMove = new NodeMove();
             for (var pathIndex = 0; pathIndex < path.Count - 2; pathIndex++)

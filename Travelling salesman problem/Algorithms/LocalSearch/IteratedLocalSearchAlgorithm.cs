@@ -8,10 +8,11 @@ namespace ConsoleApplication.Algorithms.LocalSearch
 {
     public class IteratedLocalSearchAlgorithm : LocalSearchAlgorithm
     {
-        private Random _randomGenerator;
-        private long AlgorithmSolveTimeMs = 8000;
+        private readonly Random _randomGenerator;
+        private const long AlgorithmSolveTimeMs = 8000;
 
-        private int PerturbanceLength = 2;
+        private const int PerturbanceLength = 2;
+
         public IteratedLocalSearchAlgorithm(int steps, IEdgeFinder edgeFinder) : base(steps, edgeFinder)
         {
             _randomGenerator = new Random();
@@ -21,49 +22,46 @@ namespace ConsoleApplication.Algorithms.LocalSearch
         {
             var timer = new Stopwatch();
             timer.Start();
-            int cost = CalculateCost(path, completeGraph);
-            while(timer.ElapsedMilliseconds < AlgorithmSolveTimeMs){
+            var cost = CalculateCost(path, completeGraph);
+            while(timer.ElapsedMilliseconds < AlgorithmSolveTimeMs)
+            {
 
                 var newPath = new List<int>(path);
                 var perturbance = new List<IMove>();
-                for(int i=0; i<PerturbanceLength; i++){
-                    IMove move = getRandomMove(newPath, completeGraph);
+                for(var i=0; i<PerturbanceLength; i++)
+                {
+                    var move = GetRandomMove(newPath, completeGraph);
                     move.Move(newPath);
                     perturbance.Add(move);
                 }
                 var bestMove = FindBestMove(newPath, completeGraph);
-                if(bestMove != null){
-                    bestMove.Move(newPath);
-                }
+                bestMove?.Move(newPath);
 
                 var newCost = CalculateCost(newPath, completeGraph);
-                if(newCost < cost){
-                    path = newPath;
-                    cost = newCost;
-                }
-                
+                if (newCost >= cost) continue;
+                path = newPath;
+                cost = newCost;
             }
             return CalculateCost(path, completeGraph);
 
         }
 
-        private IMove getRandomMove(List<int> path, IGraph completeGraph)
+        private IMove GetRandomMove(List<int> path, IGraph completeGraph)
         {
-            int moveType = _randomGenerator.Next(0, 1);
-            if(moveType == 1){
-                return getRandomEdgeMove(path, completeGraph);
-            }
-            return getRandomNodeMove(path, completeGraph);
+            var moveType = _randomGenerator.Next(0, 1);
+            return moveType == 1 ?
+                GetRandomEdgeMove(path, completeGraph) :
+                GetRandomNodeMove(path, completeGraph);
         }
 
-        private IMove getRandomNodeMove(List<int> path, IGraph completeGraph)
+        private IMove GetRandomNodeMove(List<int> path, IGraph completeGraph)
         {
             NodeMove nodeMove = new NodeMove();
             var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
             var excludedNodeIndex = _randomGenerator.Next(1, path.Count-1);
-            var NodeAfterMove = _randomGenerator.Next(1, unvisitedNodes.Count-1);
+            var nodeAfterMove = _randomGenerator.Next(1, unvisitedNodes.Count-1);
             nodeMove.ExcludedNodePathIndex = excludedNodeIndex;
-            nodeMove.NodeAfterMove = unvisitedNodes[NodeAfterMove];
+            nodeMove.NodeAfterMove = unvisitedNodes[nodeAfterMove];
             
             var currentCost = completeGraph.Weight(path[excludedNodeIndex - 1], path[excludedNodeIndex]) + completeGraph.Weight(path[excludedNodeIndex], path[excludedNodeIndex + 1]);
             var costFromUnvisited = completeGraph.Weight(path[excludedNodeIndex - 1], nodeMove.NodeAfterMove) + completeGraph.Weight(nodeMove.NodeAfterMove, path[excludedNodeIndex + 1]);
@@ -74,7 +72,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             
         }
 
-        private IMove getRandomEdgeMove(List<int> path, IGraph completeGraph)
+        private IMove GetRandomEdgeMove(List<int> path, IGraph completeGraph)
         {
             var newMove = new EdgeMove();
 
