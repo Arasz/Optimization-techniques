@@ -16,11 +16,11 @@ namespace ConsoleApplication.Solver
 		{
 			for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
 			{
-				Solve(tspSolvingAlgorithm, pathAccumulator, startNode);
+				SolveOnce(tspSolvingAlgorithm, pathAccumulator, startNode);
 			}
 		}
 
-		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
+		public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
 		{
 			var path = new List<int>();
 			int localResult;

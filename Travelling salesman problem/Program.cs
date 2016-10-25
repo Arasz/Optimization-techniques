@@ -124,7 +124,7 @@ namespace ConsoleApplication
 
 		private static void SolveAndPrint(ISolver solver, IAlgorithm algorithm, string title, IResultPrinter resultPrinter)
 		{
-			solver.Solve(algorithm);
+			solver.SolveOnce(algorithm);
 			resultPrinter.Print(title);
 		}
 	}

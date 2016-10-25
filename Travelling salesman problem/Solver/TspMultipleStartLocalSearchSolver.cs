@@ -4,6 +4,7 @@ using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using static System.Int32;
 
 namespace ConsoleApplication.Solver
 {
@@ -12,11 +13,11 @@ namespace ConsoleApplication.Solver
 		private readonly IAlgorithm _initializationAlgorithm;
 		private readonly ISolver _initializationSolver;
 
-        private int InsideAlgorithmRepeatAmount = 1000;
+	    private const int InsideAlgorithmRepeatAmount = 1000;
 
-        private int MSLSRepeatAmount = 10;
+	    private const int MslsRepeatAmount = 10;
 
-        private Random _randomGenerator;
+	    private readonly Random _randomGenerator;
 
 		public TspMultipleStartLocalSearchSolver(IGraph completeGraph, ISolver initializationSolver, IAlgorithm initializationAlgorithm) : base(completeGraph)
 		{
@@ -29,21 +30,25 @@ namespace ConsoleApplication.Solver
 		{
 			var context = SolvingTimeContext.Instance;  
 
-			int bestResult = Int32.MaxValue;
+			var bestResult = MaxValue;
 			var bestPath = new List<int>();
-			for(int i=0; i<MSLSRepeatAmount; i++)
+			for(var i=0; i<MslsRepeatAmount; i++)
 			{
 				using(context)
 				{
-					for(int j=0; j<InsideAlgorithmRepeatAmount; j++)
+					for(var j=0; j<InsideAlgorithmRepeatAmount; j++)
 			    	{
 						var pathAccumulator = new PathAccumulator();
 						var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
-                		_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
+
+                		_initializationSolver.SolveOnce(_initializationAlgorithm, pathAccumulator, startNode);
+
 						var accumulatedPath = pathAccumulator.Paths[0];
 				    	var localPath = accumulatedPath.NodesList;
 						var localResult = tspSolvingAlgorithm.Solve(localPath.First(), _completeGraph, localPath);
-						if(localResult < bestResult){
+
+				        if(localResult < bestResult)
+						{
 							bestResult = localResult;
 							bestPath = localPath;
 						}
@@ -59,7 +64,7 @@ namespace ConsoleApplication.Solver
 			throw new NotImplementedException();
 		}
 
-        public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
+        public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
         {
             throw new NotImplementedException();
         }

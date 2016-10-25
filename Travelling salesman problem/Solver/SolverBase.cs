@@ -14,6 +14,7 @@ namespace ConsoleApplication.Solver
 		protected readonly IGraph _completeGraph;
 
 		private List<TimeSpan> TimeResults = new List<TimeSpan>();
+
 		public virtual IList<int> BestPath { get; protected set; }
 
 		public virtual int BestResult { get; protected set; } = MaxValue;
@@ -37,11 +38,11 @@ namespace ConsoleApplication.Solver
 
 		public virtual void Solve(IAlgorithm tspSolvingAlgorithm) => Solve(tspSolvingAlgorithm, new NullPathAccumulator());
 
-		public virtual void Solve(IAlgorithm tspSolvingAlgorithm, int startNode) => Solve(tspSolvingAlgorithm, new NullPathAccumulator(), startNode);
+		public virtual void SolveOnce(IAlgorithm tspSolvingAlgorithm, int startNode) => SolveOnce(tspSolvingAlgorithm, new NullPathAccumulator(), startNode);
 
 		public abstract void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator);
 
-		public abstract void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode);
+		public abstract void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode);
 
 
 		protected virtual void UpdateResults(int localResult, IList<int> path, TimeSpan localTime)

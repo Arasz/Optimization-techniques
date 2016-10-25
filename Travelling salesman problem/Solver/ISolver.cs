@@ -23,10 +23,10 @@ namespace ConsoleApplication.Solver
 
 		void Solve(IAlgorithm tspSolvingAlgorithm);
 
-		void Solve(IAlgorithm tspSolvingAlgorithm, int startNode);
+		void SolveOnce(IAlgorithm tspSolvingAlgorithm, int startNode);
 
 		void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator);
 
-		void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode);
+		void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode);
 	}
 }
