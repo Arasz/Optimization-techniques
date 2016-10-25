@@ -30,7 +30,9 @@ namespace ConsoleApplication
 
 //			RunMSLSAlgorithms(graph, solver, coordinatesPath);
 
-			RunILSAlgorithm(graph, solver, coordinatesPath);
+			//RunILSAlgorithm(graph, solver, coordinatesPath);
+
+		    RunRandomLSPathsStatistics(graph, solver, coordinatesPath);
 
 			
 		}
@@ -110,9 +112,11 @@ namespace ConsoleApplication
 				"Random with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "Random_ILS", coordinatesPath));
         }
 
-	    private static void RunForestRun()
+	    private static void RunRandomLSPathsStatistics(IGraph graph, TspSolver solver, string coordinatesPath)
 	    {
-
+	        var localSearchSolver = new PathSimilaritySolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
+	        var localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
+	        localSearchSolver.Solve(localSearchAlgorithm);
 	    }
 
 		private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver, string algorithmName, string coordinatesPath)
