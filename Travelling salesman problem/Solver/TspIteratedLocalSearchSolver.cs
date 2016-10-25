@@ -29,7 +29,7 @@ namespace ConsoleApplication.Solver
             _randomGenerator = new Random();
 		}
 
-		public override void SolveOnce(IAlgorithm tspSolvingAlgorithm)
+		public override void Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 			var context = SolvingTimeContext.Instance;
 
@@ -81,7 +81,7 @@ namespace ConsoleApplication.Solver
             return cost;
         }
 
-		public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
+		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
 		{
 			throw new NotImplementedException();
 		}

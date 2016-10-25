@@ -110,6 +110,11 @@ namespace ConsoleApplication
 				"Random with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "Random_ILS", coordinatesPath));
         }
 
+	    private static void RunForestRun()
+	    {
+
+	    }
+
 		private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver, string algorithmName, string coordinatesPath)
         {
             return new ResultPrinter()
@@ -124,7 +129,7 @@ namespace ConsoleApplication
 
 		private static void SolveAndPrint(ISolver solver, IAlgorithm algorithm, string title, IResultPrinter resultPrinter)
 		{
-			solver.SolveOnce(algorithm);
+			solver.Solve(algorithm);
 			resultPrinter.Print(title);
 		}
 	}
