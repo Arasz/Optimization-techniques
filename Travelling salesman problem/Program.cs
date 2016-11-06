@@ -54,26 +54,33 @@ namespace ConsoleApplication
         }
 
 		private static void RunAlgorithmsWithLocalSearch(IGraph graph, TspSolver solver, string coordinatesPath)
-        {
-            var localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new EdgeFinder()));
-			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"NN WITH LOCAL SEARCH", getLocalSearchResultPrinter(localSearchSolver, "NN_LS", coordinatesPath));
+		{
+		    var edgeFinder = new EdgeFinder();
+		    var graspEdgeFiner = new GraspEdgeFinder(3);
 
-			localSearchSolver = new TspLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new EdgeFinder()));
-			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"GC with local search opt", getLocalSearchResultPrinter(localSearchSolver, "GC_LS", coordinatesPath));
+		    var localSearchSolver = new TspLocalSearchSolver(graph);
 
-			localSearchSolver = new TspLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
-			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"NN Grasp with local search opt", getLocalSearchResultPrinter(localSearchSolver, "NNG_LS", coordinatesPath));
+		    var localSearchALgorithm = new LocalSearchAlgorithm(Steps,edgeFinder);
 
-			localSearchSolver = new TspLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
-			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"GC GRASP with local search opt", getLocalSearchResultPrinter(localSearchSolver, "GCG_LS", coordinatesPath));
+		    var generatedPaths = solver.Solve(new NearestNeighborAlgorithm(Steps, edgeFinder));
+		    localSearchSolver.Solve(localSearchALgorithm, generatedPaths);
+		    LocalSearchResultPrinter(localSearchSolver, "NN_LS", coordinatesPath).Print("NN with local search opt");
 
-			localSearchSolver = new TspLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
-			SolveAndPrint(localSearchSolver, new LocalSearchAlgorithm(Steps, new EdgeFinder()),
-				"RANDOM with local search opt", getLocalSearchResultPrinter(localSearchSolver, "Random_LS", coordinatesPath));
+		    generatedPaths = solver.Solve(new GreedyCycleAlgorithm(Steps, edgeFinder));
+		    localSearchSolver.Solve(localSearchALgorithm, generatedPaths);
+		    LocalSearchResultPrinter(localSearchSolver, "GC_LS", coordinatesPath).Print("GC with local search opt");
+
+		    generatedPaths = solver.Solve(new NearestNeighborAlgorithm(Steps, graspEdgeFiner));
+		    localSearchSolver.Solve(localSearchALgorithm, generatedPaths);
+		    LocalSearchResultPrinter(localSearchSolver,  "NNG_LS", coordinatesPath).Print("NN Grasp with local search opt");
+
+		    generatedPaths = solver.Solve(new GreedyCycleAlgorithm(Steps, graspEdgeFiner));
+		    localSearchSolver.Solve(localSearchALgorithm, generatedPaths);
+		    LocalSearchResultPrinter(localSearchSolver, "GCG_LS", coordinatesPath).Print("GC GRASP with local search opt");
+
+		    generatedPaths = solver.Solve(new RandomPathAlgorithm(Steps, edgeFinder));
+		    localSearchSolver.Solve(localSearchALgorithm, generatedPaths);
+		    LocalSearchResultPrinter(localSearchSolver, "Random_LS", coordinatesPath).Print("RANDOM with local search opt");
         }
 
 		private static void RunMSLSAlgorithms(IGraph graph, TspSolver solver, string coordinatesPath)
@@ -81,17 +88,17 @@ namespace ConsoleApplication
 			var localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
 			var localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"NN Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver, "NNG_MSLS", coordinatesPath));
+				"NN Grasp with local search (MSLS)", LocalSearchResultPrinter(localSearchSolver, "NNG_MSLS", coordinatesPath));
 
 			localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
 			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"GC Grasp with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver, "GCG_MSLS", coordinatesPath));
+				"GC Grasp with local search (MSLS)", LocalSearchResultPrinter(localSearchSolver, "GCG_MSLS", coordinatesPath));
 
 			localSearchSolver = new TspMultipleStartLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
 			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"Random with local search (MSLS)", getLocalSearchResultPrinter(localSearchSolver, "Random_MSLS", coordinatesPath));
+				"Random with local search (MSLS)", LocalSearchResultPrinter(localSearchSolver, "Random_MSLS", coordinatesPath));
         }
 
 		private static void RunILSAlgorithm(IGraph graph, TspSolver solver, string coordinatesPath)
@@ -99,17 +106,17 @@ namespace ConsoleApplication
             var localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new NearestNeighborAlgorithm(Steps, new GraspEdgeFinder(3)));
 			var localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"NN Grasp with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "NNG_ILS", coordinatesPath));
+				"NN Grasp with local search (ILS)", LocalSearchResultPrinter(localSearchSolver, "NNG_ILS", coordinatesPath));
 
 			localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new GreedyCycleAlgorithm(Steps, new GraspEdgeFinder(3)));
 			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"GC Grasp with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "GCG_ILS", coordinatesPath));
+				"GC Grasp with local search (ILS)", LocalSearchResultPrinter(localSearchSolver, "GCG_ILS", coordinatesPath));
 
 			localSearchSolver = new TspIteratedLocalSearchSolver(graph, solver, new RandomPathAlgorithm(Steps, new EdgeFinder()));
 			localSearchAlgorithm = new LocalSearchAlgorithm(Steps, new EdgeFinder());
 			SolveAndPrint(localSearchSolver, localSearchAlgorithm,
-				"Random with local search (ILS)", getLocalSearchResultPrinter(localSearchSolver, "Random_ILS", coordinatesPath));
+				"Random with local search (ILS)", LocalSearchResultPrinter(localSearchSolver, "Random_ILS", coordinatesPath));
         }
 
 	    private static void RunRandomLSPathsStatistics(IGraph graph, TspSolver solver, string coordinatesPath)
@@ -119,7 +126,7 @@ namespace ConsoleApplication
 	        localSearchSolver.Solve(localSearchAlgorithm);
 	    }
 
-		private static IResultPrinter getLocalSearchResultPrinter(ISolver localSearchSolver, string algorithmName, string coordinatesPath)
+		private static IResultPrinter LocalSearchResultPrinter(ISolver localSearchSolver, string algorithmName, string coordinatesPath)
         {
             return new ResultPrinter()
 					.AddPrinter(new ConsolePrinter(), new ConsoleContentBuilder(localSearchSolver))

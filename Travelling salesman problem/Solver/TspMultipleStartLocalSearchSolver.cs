@@ -39,13 +39,14 @@ namespace ConsoleApplication.Solver
 					for(var j=0; j<InsideAlgorithmRepeatAmount; j++)
 			    	{
 						var pathAccumulator = new PathAccumulator();
-						var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
 
-                		_initializationSolver.SolveOnce(_initializationAlgorithm, pathAccumulator, startNode);
+						var startNode = _randomGenerator.Next(0, CompleteGraph.NodesCount-1);
+
+                		_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
 
 						var accumulatedPath = pathAccumulator.Paths[0];
-				    	var localPath = accumulatedPath.NodesList;
-						var localResult = tspSolvingAlgorithm.Solve(localPath.First(), _completeGraph, localPath);
+				    	var localPath = accumulatedPath.Nodes;
+						var localResult = tspSolvingAlgorithm.Solve(localPath.First(), CompleteGraph, localPath);
 
 				        if(localResult < bestResult)
 						{
@@ -64,7 +65,7 @@ namespace ConsoleApplication.Solver
 			throw new NotImplementedException();
 		}
 
-        public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
+        public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
         {
             throw new NotImplementedException();
         }

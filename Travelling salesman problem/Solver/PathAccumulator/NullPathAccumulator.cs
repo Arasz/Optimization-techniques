@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ConsoleApplication.Graphs;
 
 namespace ConsoleApplication.Solver.SolverVisitor
 {
@@ -6,7 +7,7 @@ namespace ConsoleApplication.Solver.SolverVisitor
 	{
 		public IList<Path> Paths { get; } = new List<Path>();
 
-		public void AddPath(Path path)
+		public IPathAccumulator AddPath(Path path)
 		{
 		}
 	}

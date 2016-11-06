@@ -40,23 +40,23 @@ namespace ConsoleApplication.Solver
 				using(context)
 				{
 					var pathAccumulator = new PathAccumulator();
-					var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
-                	_initializationSolver.SolveOnce(_initializationAlgorithm, pathAccumulator, startNode);
+					var startNode = _randomGenerator.Next(0, CompleteGraph.NodesCount-1);
+                	_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator, startNode);
 					var accumulatedPath = pathAccumulator.Paths[0];
-				    bestPath = accumulatedPath.NodesList;
+				    bestPath = accumulatedPath.Nodes;
 					
 					var timer = new Stopwatch();
             		timer.Start();
-            		var cost = CalculateCost(bestPath, _completeGraph);
+            		var cost = CalculateCost(bestPath, CompleteGraph);
             		while(timer.ElapsedMilliseconds < AlgorithmSolveTimeMs)
 					{
 						var newPath = new List<int>(bestPath);
             			for(var j=0; j<PerturbanceLength; j++)
                 		{
-                    		var move = GetRandomMove(newPath, _completeGraph);
+                    		var move = GetRandomMove(newPath, CompleteGraph);
                     		move.Move(newPath);
                 		}
-						var newCost = tspSolvingAlgorithm.Solve(bestPath.First(), _completeGraph, bestPath);
+						var newCost = tspSolvingAlgorithm.Solve(bestPath.First(), CompleteGraph, bestPath);
                 		if (newCost >= cost) continue;
                 
                 		bestPath = newPath;
@@ -86,12 +86,12 @@ namespace ConsoleApplication.Solver
 			throw new NotImplementedException();
 		}
 
-        public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
+        public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
         {
             throw new NotImplementedException();
         }
 
-		private IMove GetRandomMove(List<int> path, IGraph completeGraph)
+		private IMoveStrategy GetRandomMove(List<int> path, IGraph completeGraph)
         {
             var moveType = _randomGenerator.Next(0, 1);
             return moveType == 1 ?
@@ -99,27 +99,27 @@ namespace ConsoleApplication.Solver
                 GetRandomNodeMove(path, completeGraph);
         }
 
-        private IMove GetRandomNodeMove(List<int> path, IGraph completeGraph)
+        private IMoveStrategy GetRandomNodeMove(List<int> path, IGraph completeGraph)
         {
-            NodeMove nodeMove = new NodeMove();
+            NodeMoveStrategy nodeMoveStrategy = new NodeMoveStrategy();
             var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
             var excludedNodeIndex = _randomGenerator.Next(1, path.Count-1);
             var nodeAfterMove = _randomGenerator.Next(1, unvisitedNodes.Count-1);
-            nodeMove.ExcludedNodePathIndex = excludedNodeIndex;
-            nodeMove.NodeAfterMove = unvisitedNodes[nodeAfterMove];
+            nodeMoveStrategy.ExcludedNodePathIndex = excludedNodeIndex;
+            nodeMoveStrategy.NodeAfterMove = unvisitedNodes[nodeAfterMove];
             
             var currentCost = completeGraph.Weight(path[excludedNodeIndex - 1], path[excludedNodeIndex]) + completeGraph.Weight(path[excludedNodeIndex], path[excludedNodeIndex + 1]);
-            var costFromUnvisited = completeGraph.Weight(path[excludedNodeIndex - 1], nodeMove.NodeAfterMove) + completeGraph.Weight(nodeMove.NodeAfterMove, path[excludedNodeIndex + 1]);
+            var costFromUnvisited = completeGraph.Weight(path[excludedNodeIndex - 1], nodeMoveStrategy.NodeAfterMove) + completeGraph.Weight(nodeMoveStrategy.NodeAfterMove, path[excludedNodeIndex + 1]);
             
-            nodeMove.CostImprovement = costFromUnvisited - currentCost;
+            nodeMoveStrategy.CostImprovement = costFromUnvisited - currentCost;
 
-            return nodeMove;
+            return nodeMoveStrategy;
             
         }
 
-        private IMove GetRandomEdgeMove(List<int> path, IGraph completeGraph)
+        private IMoveStrategy GetRandomEdgeMove(List<int> path, IGraph completeGraph)
         {
-            var newMove = new EdgeMove();
+            var newMove = new EdgeMoveStrategy();
 
             var i = _randomGenerator.Next(0, path.Count - 3);
             var j = _randomGenerator.Next(i+2, path.Count - 1);

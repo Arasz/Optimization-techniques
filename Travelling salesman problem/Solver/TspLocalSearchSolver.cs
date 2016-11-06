@@ -8,43 +8,35 @@ namespace ConsoleApplication.Solver
 {
 	public class TspLocalSearchSolver : SolverBase
 	{
-		private readonly IAlgorithm _initializationAlgorithm;
-		private readonly ISolver _initializationSolver;
 
-		public TspLocalSearchSolver(IGraph completeGraph, ISolver initializationSolver, IAlgorithm initializationAlgorithm) : base(completeGraph)
+		public override IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
 		{
-			_initializationSolver = initializationSolver;
-			_initializationAlgorithm = initializationAlgorithm;
-		}
+		    Statistics = new SolverStatistics();
 
-		public override void Solve(IAlgorithm tspSolvingAlgorithm)
-		{
-			var pathAccumulator = new PathAccumulator();
-
-			_initializationSolver.Solve(_initializationAlgorithm, pathAccumulator);
+		    var newAccumulator = new PathAccumulator();
 
 			foreach (var path in pathAccumulator.Paths)
 			{
-				var localPath = path.NodesList;
 				var context = SolvingTimeContext.Instance;
 
-				int localResult;
-				var startNode = path.NodesList.First();
+			    Path localyBestPath;
 
-				using (context)
-					localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, localPath);
-				UpdateResults(localResult, localPath, context.Elapsed);
+			    using (context)
+			    {
+			        localyBestPath = tspSolvingAlgorithm.Solve(SelectStartNode(path), CompleteGraph, path);
+			    }
+
+			    newAccumulator.AddPath(localyBestPath);
+				Statistics.UpdateSolvingResults(localyBestPath, context.Elapsed);
 			}
+
+		    return newAccumulator;
 		}
 
-		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
-		{
-			throw new NotImplementedException();
-		}
+	    private int SelectStartNode(Path path) => path.Nodes.First();
 
-        public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	    public TspLocalSearchSolver(IGraph completeGraph) : base(completeGraph)
+	    {
+	    }
+	}
 }
