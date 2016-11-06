@@ -29,7 +29,7 @@ namespace ConsoleApplication.Solver
             };
         }
 
-        public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
+        public override IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
         {
             var bestResult = int.MaxValue;
             var bestPath = new List<int>();

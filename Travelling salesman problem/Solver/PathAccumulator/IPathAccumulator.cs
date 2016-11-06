@@ -7,6 +7,6 @@ namespace ConsoleApplication.Solver.SolverVisitor
 	{
 		IList<Path> Paths { get; }
 
-		IPathAccumulator AddPath(Path path);
+		void AddPath(Path path);
 	}
 }

@@ -25,12 +25,16 @@ namespace ConsoleApplication.Solver
 		}
 
 		public virtual IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm)
-		    => Solve(tspSolvingAlgorithm, new NullPathAccumulator());
+	    {
+	        throw new NotImplementedException();
+	    }
 
 	    public virtual IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
-	        => Solve(tspSolvingAlgorithm, pathAccumulator, path => path.Nodes.First());
+	    {
+	        throw new NotImplementedException();
+	    }
 
-	    public virtual IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, Func<Path, int> startNodeSelector )
+	    public IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
 	    {
 	        throw new NotImplementedException();
 	    }
@@ -52,6 +56,11 @@ namespace ConsoleApplication.Solver
 	        private List<int> Costs = new List<int>();
 
 	        private List<TimeSpan> SolvingTimes = new List<TimeSpan>();
+
+	        public SolverStatistics()
+	        {
+	            BestPath = new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));
+	        }
 
 	        public void UpdateSolvingResults(Path bestPath, TimeSpan solvingTime)
 	        {
