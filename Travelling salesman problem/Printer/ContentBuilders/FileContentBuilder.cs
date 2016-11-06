@@ -9,12 +9,12 @@ namespace ConsoleApplication.Printer.ContentBuilders
 {
     public class FileContentBuilder : IContentBuilder
     {
+        private readonly ISolverStatistics _solverStatistics;
         private readonly FileInfo _coordinateFile;
-        private readonly ISolver _solver;
 
-        public FileContentBuilder(ISolver solver, string coordinateFilePath)
+        public FileContentBuilder(ISolverStatistics solverStatistics, string coordinateFilePath)
         {
-            _solver = solver;
+            _solverStatistics = solverStatistics;
             _coordinateFile = new FileInfo(coordinateFilePath);
 
             if (!_coordinateFile.Exists)
@@ -29,11 +29,11 @@ namespace ConsoleApplication.Printer.ContentBuilders
             var builder = new StringBuilder();
             builder.AppendLine("".PadRight(30, '*'));
             builder.AppendLine(title + $" Date: {DateTime.Now}");
-            builder.AppendLine($"Min cost: {_solver.BestResult}, Mean cost: {_solver.MeanReasult}," +
-                               $" Max cost: {_solver.WorstResult}");
-            builder.AppendLine($"Elements in path: {_solver.BestPath.Count()}");
+            builder.AppendLine($"Min cost: {_solverStatistics.BestPath.Cost}, Mean cost: {_solverStatistics.MeanCost}," +
+                               $" Max cost: {_solverStatistics.WorstCost}");
+            builder.AppendLine($"Elements in path: {_solverStatistics.BestPath.Count}");
             builder.AppendLine("Path:");
-            foreach (var node in _solver.BestPath)
+            foreach (var node in _solverStatistics.BestPath.Nodes)
                 builder.AppendLine($"{node.ToString().PadRight(3)} {coordinates[node + 1]}");
             builder.AppendLine("".PadRight(30, '*'));
             return builder.ToString();

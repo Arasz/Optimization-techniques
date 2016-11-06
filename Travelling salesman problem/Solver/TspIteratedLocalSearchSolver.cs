@@ -1,11 +1,10 @@
 using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Diagnostics;
 using ConsoleApplication.Algorithms.LocalSearch;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
@@ -29,11 +28,11 @@ namespace ConsoleApplication.Solver
             _randomGenerator = new Random();
 		}
 
-		public override IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm)
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 			var context = SolvingTimeContext.Instance;
 		    Statistics = new SolverStatistics();
-		    var resultPathAccumulator = new PathAccumulator();
+		    var resultPathAccumulator = new SolverResult.SolverResult();
 
 		    for(var i=0; i<IlsRepeatAmount; i++)
 			{

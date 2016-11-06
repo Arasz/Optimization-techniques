@@ -1,21 +1,20 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
-using System;
 using System.Linq;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
 	public class TspLocalSearchSolver : SolverBase
 	{
 
-		public override IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
 		{
 		    Statistics = new SolverStatistics();
 
-		    var newAccumulator = new PathAccumulator();
+		    var newAccumulator = new SolverResult.SolverResult();
 
-			foreach (var path in pathAccumulator.Paths)
+			foreach (var path in solverResult.Paths)
 			{
 				var context = SolvingTimeContext.Instance;
 

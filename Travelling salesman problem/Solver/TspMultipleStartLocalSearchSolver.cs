@@ -1,9 +1,9 @@
 using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
@@ -26,11 +26,11 @@ namespace ConsoleApplication.Solver
             _randomGenerator = new Random();
 		}
 
-		public override IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm)
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 			var context = SolvingTimeContext.Instance;
 		    Statistics = new SolverStatistics();
-		    var resultAccumulator = new PathAccumulator();
+		    var resultAccumulator = new SolverResult.SolverResult();
 
 
 			var bestPath = new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));

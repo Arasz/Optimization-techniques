@@ -1,11 +1,10 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using static System.Int32;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
@@ -24,17 +23,17 @@ namespace ConsoleApplication.Solver
 		    Statistics = new SolverStatistics();
 		}
 
-		public virtual IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm)
+		public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 	    {
 	        throw new NotImplementedException();
 	    }
 
-	    public virtual IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
+	    public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
 	    {
 	        throw new NotImplementedException();
 	    }
 
-	    public IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
+	    public ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
 	    {
 	        throw new NotImplementedException();
 	    }

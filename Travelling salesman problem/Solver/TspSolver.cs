@@ -1,25 +1,24 @@
-﻿using System;
-using ConsoleApplication.Algorithms;
+﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
 	public class TspSolver : SolverBase
 	{
-	    private readonly IPathAccumulator _pathAccumulator = new PathAccumulator();
+	    private readonly ISolverResult _solverResult = new SolverResult.SolverResult();
 
 		public TspSolver(IGraph completeGraph) : base(completeGraph)
 		{
 		}
 
-		public override IPathAccumulator Solve(IAlgorithm tspSolvingAlgorithm)
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 		    Statistics = new SolverStatistics();
 
 		    for (var startNode = 0; startNode < CompleteGraph.NodesCount; startNode++)
 		        Solve(tspSolvingAlgorithm, startNode);
-		    return _pathAccumulator;
+		    return _solverResult;
 		}
 
 	    private void Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
@@ -33,7 +32,7 @@ namespace ConsoleApplication.Solver
 		    }
 
 			Statistics.UpdateSolvingResults(bestPath, context.Elapsed);
-		    _pathAccumulator.AddPath(bestPath);
+		    _solverResult.AddPath(bestPath);
 		}
 	}
 }

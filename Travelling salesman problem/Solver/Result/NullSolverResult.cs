@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using ConsoleApplication.Graphs;
 
-namespace ConsoleApplication.Solver.SolverVisitor
+namespace ConsoleApplication.Solver.SolverResult
 {
-	public class NullPathAccumulator : IPathAccumulator
+	public class NullSolverResult : ISolverResult
 	{
 		public IList<Path> Paths { get; } = new List<Path>();
 
