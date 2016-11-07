@@ -8,6 +8,8 @@ using ConsoleApplication.Solver;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using ConsoleApplication.Similarity;
 
 namespace ConsoleApplication
@@ -29,13 +31,39 @@ namespace ConsoleApplication
 
 			//RunAlgorithmsWithLocalSearch(graph, solver, coordinatesPath);
 
-//			RunMSLSAlgorithms(graph, solver, coordinatesPath);
+            //RunMSLSAlgorithms(graph, solver, coordinatesPath);
 
 			//RunILSAlgorithm(graph, solver, coordinatesPath);
 
-		    RunRandomLSPathsStatistics(graph, solver, coordinatesPath);
+		    //RunRandomLSPathsStatistics(graph, solver, coordinatesPath);
 
-			
+		    var calculationStrategies = new ISimilarityCalculationStrategy[]
+		        {new EdgeSimillarityStrategy(), new NodeSimilarityStrategy()};
+
+			var similaritySolver = new PathSimilaritySolver(graph,
+			    new InitializationSolver(new TspSolver(graph),  new RandomPathAlgorithm(Steps, new EdgeFinder())),
+			    calculationStrategies);
+
+		    similaritySolver.Solve(new LocalSearchAlgorithm(Steps, new EdgeFinder()));
+
+		    var filePrinter = new FilePrinter("similarity_results.res");
+
+		    var resultString = new StringBuilder();
+
+		    foreach (var similairityValue in similaritySolver.SimilairityValues)
+		    {
+		        resultString.AppendLine(similairityValue.Key);
+		        resultString.AppendLine($"{nameof(SimilaritySolverResult.Cost)} {nameof(SimilaritySolverResult.SimilarityValue)}");
+
+		        foreach (var similaritySolverResult in similairityValue.Value)
+		            resultString.AppendLine($"{similaritySolverResult.Cost} {similaritySolverResult.SimilarityValue:F}");
+
+		        resultString.AppendLine();
+		    }
+
+		    filePrinter.Print(resultString.ToString());
+
+		    Console.WriteLine("SUCCES!!!");
 		}
 
         private static void RunBasicAlgorithms(TspSolver solver, string coordinatesPath)

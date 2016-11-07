@@ -33,7 +33,7 @@ namespace ConsoleApplication.Solver
 	        throw new NotImplementedException();
 	    }
 
-	    public ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
+	    public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
 	    {
 	        throw new NotImplementedException();
 	    }

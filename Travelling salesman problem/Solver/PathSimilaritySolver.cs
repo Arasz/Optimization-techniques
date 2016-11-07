@@ -14,10 +14,10 @@ namespace ConsoleApplication.Solver
         private readonly IEnumerable<ISimilarityCalculationStrategy> _calculatedSimilarities;
         private readonly int _generatedPaths;
         private readonly Random _randomGenerator;
-        private readonly ISimilarityCalculator _similarityCalculator;
 
 
-        public Dictionary<string, double[,]> SimilarityMatrices { get; } = new Dictionary<string, double[,]>();
+        public Dictionary<string, IList<SimilaritySolverResult>> SimilairityValues{ get; } =
+            new Dictionary<string ,IList<SimilaritySolverResult>>();
 
         public PathSimilaritySolver(IGraph completeGraph, IInitializationSolver initializationSolver,
             IEnumerable<ISimilarityCalculationStrategy> calculatedSimilarities, int generatedPaths = 1000) : base(completeGraph)
@@ -26,42 +26,61 @@ namespace ConsoleApplication.Solver
             _calculatedSimilarities = calculatedSimilarities;
             _generatedPaths = generatedPaths;
             _randomGenerator = new Random();
-            _similarityCalculator = new SimilarityCalculator();
         }
 
         public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
         {
             var bestPath = InitialBestPath;
-            ISolverResult solverResult = new NullSolverResult();
+            ISolverResult solverResult = new SolverResult.SolverResult();
 
             for (var j = 0; j < _generatedPaths; j++)
             {
-                solverResult = _initializationSolver.Solve(StartNode);
+                var localSolverResult = _initializationSolver.Solve(StartNode);
 
-                var localPath = solverResult.Paths[j];
+                var localPath = localSolverResult.Paths[0];
 
                 localPath = tspSolvingAlgorithm.Solve(localPath.Nodes.First(), CompleteGraph, localPath);
+
+                solverResult.AddPath(localPath);
 
                 if (localPath.Cost < bestPath.Cost)
                     bestPath = localPath;
             }
 
-            CalculateSimilarities(solverResult);
+            CalculateSimilarities(solverResult, new ForEachSimilarityCalculator());
+            CalculateSimilarities(solverResult, new WithBestSimilarityCalculator(bestPath));
 
             return solverResult;
         }
 
         private static Path InitialBestPath => new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue) );
 
-        private void CalculateSimilarities(ISolverResult solverResult)
+        private void CalculateSimilarities(ISolverResult solverResult, ISimilarityCalculator similarityCalculator)
         {
             foreach (var strategy in _calculatedSimilarities)
             {
-                SimilarityMatrices[strategy.GetType().Name] = _similarityCalculator
-                    .CalculateSimilarityMatrix(strategy, solverResult);
+                SimilairityValues[$"{strategy.GetType().Name}|{similarityCalculator.GetType().Name}"] =
+                    similarityCalculator.CalculatePathsSimilarities(strategy, solverResult)
+                    .Zip(solverResult.Paths, (similarity, path) => new SimilaritySolverResult(similarity, path.Cost))
+                    .ToList();
             }
         }
 
         private int StartNode => _randomGenerator.Next(0, CompleteGraph.NodesCount - 1);
+    }
+
+    public struct SimilaritySolverResult
+    {
+        public SimilaritySolverResult(double similarityValue, int cost)
+        {
+            SimilarityValue = similarityValue;
+            Cost = cost;
+        }
+
+        public double SimilarityValue { get; }
+
+        public int Cost { get; }
+
+        public override string ToString() => $"S: {SimilarityValue} | C: {Cost}";
     }
 }

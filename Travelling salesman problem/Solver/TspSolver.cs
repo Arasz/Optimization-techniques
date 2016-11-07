@@ -15,24 +15,34 @@ namespace ConsoleApplication.Solver
 		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 		    Statistics = new SolverStatistics();
+            var solverResult = new SolverResult.SolverResult();
+
 
 		    for (var startNode = 0; startNode < CompleteGraph.NodesCount; startNode++)
-		        Solve(tspSolvingAlgorithm, startNode);
+		        Solve(tspSolvingAlgorithm, startNode, solverResult);
 		    return _solverResult;
 		}
 
-	    private void Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
-		{
-			Path bestPath;
+	    private ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode, ISolverResult solverResult)
+	    {
+	        Path bestPath;
 
-			var context = SolvingTimeContext.Instance;
-		    using (context)
-		    {
-		        bestPath = tspSolvingAlgorithm.Solve(startNode, CompleteGraph);
-		    }
+	        var context = SolvingTimeContext.Instance;
+	        using (context)
+	        {
+	            bestPath = tspSolvingAlgorithm.Solve(startNode, CompleteGraph);
+	        }
 
-			Statistics.UpdateSolvingResults(bestPath, context.Elapsed);
-		    _solverResult.AddPath(bestPath);
-		}
+	        Statistics.UpdateSolvingResults(bestPath, context.Elapsed);
+	        solverResult.AddPath(bestPath);
+
+	        return solverResult;
+	    }
+
+	    public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
+	    {
+	        var solverResult = new SolverResult.SolverResult();
+	        return Solve(tspSolvingAlgorithm, startNode, solverResult);
+	    }
 	}
 }

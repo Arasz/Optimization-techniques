@@ -6,7 +6,7 @@ namespace ConsoleApplication.Similarity
     {
         public double CalculateSimilarity(Path first, Path second)
         {
-            int similarityCounter;
+            var similarityCounter = 0;
             // we assum that paths have the same length
             for (var n = 0; n < first.Count-1; n++)
             {
