@@ -19,7 +19,15 @@ namespace ConsoleApplication
 	{
 		private const int Steps = 50;
 
-	    private static IContainer _dependencyContainer; 
+	    private static IContainer _dependencyContainer;
+
+
+	    private static void InitializeDependencies()
+	    {
+	        var containerBuilder = new ContainerBuilder();
+
+	        _dependencyContainer = containerBuilder.Build();
+	    }
 
 		public static void Main(string[] args)
 		{
@@ -55,7 +63,7 @@ namespace ConsoleApplication
 		    {
 		        var resultString = new StringBuilder();
 		        var title = similairityValue.Key;
-		        var filePrinter = new FilePrinter($"{title.Replace(' ','_')}_results.res");
+		        var filePrinter = new FilePrinter($"{title.Replace(' ','_').Replace('|','_')}_results.res");
 
 
 		        resultString.AppendLine($"{nameof(SimilaritySolverResult.Cost)} {nameof(SimilaritySolverResult.SimilarityValue)}");
