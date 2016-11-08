@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using ConsoleApplication.Graphs;
+﻿using ConsoleApplication.Graphs;
+using System.Collections.Generic;
 
-namespace ConsoleApplication.Solver.SolverResult
+namespace ConsoleApplication.Solver.Result
 {
 	public class NullSolverResult : ISolverResult
 	{

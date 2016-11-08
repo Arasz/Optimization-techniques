@@ -1,95 +1,91 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
+using ConsoleApplication.Solver.Result;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
 	public abstract class SolverBase : ISolver
 	{
-		protected readonly IGraph CompleteGraph ;
+		protected readonly IGraph CompleteGraph;
 
-	    protected SolverStatistics Statistics { get; set;}
+		public ISolverStatistics SolvingStatistics => Statistics;
 
-	    public ISolverStatistics SolvingStatistics => Statistics;
-
+		protected SolverStatistics Statistics { get; set; }
 
 		protected SolverBase(IGraph completeGraph)
 		{
-		    CompleteGraph = completeGraph;
-		    Statistics = new SolverStatistics();
+			CompleteGraph = completeGraph;
+			Statistics = new SolverStatistics();
 		}
 
 		public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
-	    {
-	        throw new NotImplementedException();
-	    }
+		{
+			throw new NotImplementedException();
+		}
 
-	    public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
-	    {
-	        throw new NotImplementedException();
-	    }
+		public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
+		{
+			throw new NotImplementedException();
+		}
 
-	    public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
-	    {
-	        throw new NotImplementedException();
-	    }
+		public virtual ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
+		{
+			throw new NotImplementedException();
+		}
 
-	    protected class SolverStatistics : ISolverStatistics
-	    {
-	        public Path BestPath { get; private set; }
+		protected class SolverStatistics : ISolverStatistics
+		{
+			private List<int> Costs = new List<int>();
+			private List<TimeSpan> SolvingTimes = new List<TimeSpan>();
+			public Path BestPath { get; private set; }
 
-	        public TimeSpan MaxSolvingTime { get; private set;}
+			public TimeSpan MaxSolvingTime { get; private set; }
 
-	        public int MeanCost => (int) Math.Round(Costs.Average());
+			public int MeanCost => (int)Math.Round(Costs.Average());
 
-	        public TimeSpan MeanSolvingTime => TimeSpan.FromMilliseconds(SolvingTimes.Average(span => span.TotalMilliseconds));
+			public TimeSpan MeanSolvingTime => TimeSpan.FromMilliseconds(SolvingTimes.Average(span => span.TotalMilliseconds));
 
-	        public TimeSpan MinSolvingTime { get; private set; }
+			public TimeSpan MinSolvingTime { get; private set; }
 
-	        public int WorstCost { get; private set;}
+			public int WorstCost { get; private set; }
 
-	        private List<int> Costs = new List<int>();
+			public SolverStatistics()
+			{
+				BestPath = new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));
+			}
 
-	        private List<TimeSpan> SolvingTimes = new List<TimeSpan>();
+			public void UpdateSolvingResults(Path bestPath, TimeSpan solvingTime)
+			{
+				UpdatePathResults(bestPath);
+				UpdateTimeMeasures(solvingTime);
+			}
 
-	        public SolverStatistics()
-	        {
-	            BestPath = new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));
-	        }
+			private void UpdatePathResults(Path path)
+			{
+				if (path.Cost < BestPath.Cost)
+					BestPath = path;
 
-	        public void UpdateSolvingResults(Path bestPath, TimeSpan solvingTime)
-	        {
-	            UpdatePathResults(bestPath);
-	            UpdateTimeMeasures(solvingTime);
+				if (path.Cost > WorstCost)
+					WorstCost = path.Cost;
 
-	        }
+				Costs.Add(path.Cost);
+			}
 
-	        private void UpdatePathResults(Path path)
-	        {
-	            if (path.Cost < BestPath.Cost)
-	                BestPath = path;
+			private void UpdateTimeMeasures(TimeSpan localTime)
+			{
+				if (localTime < MinSolvingTime)
+					MinSolvingTime = localTime;
 
-	            if (path.Cost > WorstCost)
-	                WorstCost = path.Cost;
+				if (localTime > MaxSolvingTime)
+					MaxSolvingTime = localTime;
 
-	            Costs.Add(path.Cost);
-	        }
-
-	        private void UpdateTimeMeasures(TimeSpan localTime)
-	        {
-	            if (localTime < MinSolvingTime)
-	                MinSolvingTime = localTime;
-
-	            if (localTime > MaxSolvingTime)
-	                MaxSolvingTime = localTime;
-
-	            SolvingTimes.Add(localTime);
-	        }
-	    }
+				SolvingTimes.Add(localTime);
+			}
+		}
 
 		protected class SolvingTimeContext : IDisposable
 		{

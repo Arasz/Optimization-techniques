@@ -2,7 +2,7 @@
 
 namespace ConsoleApplication.Graphs
 {
-	public struct Edge
+	public class Edge
 	{
 		public int SourceNode { get; }
 
