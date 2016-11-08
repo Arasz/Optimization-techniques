@@ -46,22 +46,23 @@ namespace ConsoleApplication
 
 		    similaritySolver.Solve(new LocalSearchAlgorithm(Steps, new EdgeFinder()));
 
-		    var filePrinter = new FilePrinter("similarity_results.res");
 
-		    var resultString = new StringBuilder();
 
 		    foreach (var similairityValue in similaritySolver.SimilairityValues)
 		    {
+		        var resultString = new StringBuilder();
+		        var title = $"{nameof(SimilaritySolverResult.Cost)} {nameof(SimilaritySolverResult.SimilarityValue)}";
+		        var filePrinter = new FilePrinter($"{title.Replace(' ','_')}_results.res");
+
 		        resultString.AppendLine(similairityValue.Key);
-		        resultString.AppendLine($"{nameof(SimilaritySolverResult.Cost)} {nameof(SimilaritySolverResult.SimilarityValue)}");
+		        resultString.AppendLine(title);
 
 		        foreach (var similaritySolverResult in similairityValue.Value)
 		            resultString.AppendLine($"{similaritySolverResult.Cost} {similaritySolverResult.SimilarityValue:F}");
 
 		        resultString.AppendLine();
+		        filePrinter.Print(resultString.ToString());
 		    }
-
-		    filePrinter.Print(resultString.ToString());
 
 		    Console.WriteLine("SUCCES!!!");
 		}
