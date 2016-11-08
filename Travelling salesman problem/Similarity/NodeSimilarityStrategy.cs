@@ -8,8 +8,7 @@ namespace ConsoleApplication.Similarity
         public double CalculateSimilarity(Path first, Path second)
         {
             return first.Nodes
-                .Zip(second.Nodes, (fromFirst, fromSecond) => fromFirst == fromSecond)
-                .Count(wereEqual => wereEqual);
+                .Count(node => second.Nodes.Contains(node));
         }
     }
 }

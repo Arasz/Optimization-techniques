@@ -14,8 +14,8 @@ namespace ConsoleApplication.Similarity
             for (var i = 0; i < count; i++)
              {
                  for (var j = 0; j < count; j++)
-                     result[i] += (i != j) ? calculationStrategy
-                         .CalculateSimilarity(solverResult.Paths[i], solverResult.Paths[j]): 0;
+                     result[i] += (i != j) ? calculationStrategy.CalculateSimilarity(solverResult.Paths[i], solverResult.Paths[j]): 0;
+
                  result[i] /= (count - 1);
              }
             return result;
