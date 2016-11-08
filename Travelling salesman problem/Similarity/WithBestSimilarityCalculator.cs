@@ -18,7 +18,7 @@ namespace ConsoleApplication.Similarity
         public IEnumerable<double> CalculatePathsSimilarities(ISimilarityCalculationStrategy calculationStrategy, ISolverResult solverResult)
         {
             return solverResult.Paths
-                .Select(path => (double)calculationStrategy.CalculateSimilarity(path, _bestPath))
+                .Select(path => calculationStrategy.CalculateSimilarity(_bestPath, path))
                 .ToList();
         }
     }

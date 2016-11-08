@@ -6,7 +6,6 @@ namespace ConsoleApplication.Solver
 {
 	public class TspSolver : SolverBase
 	{
-	    private readonly ISolverResult _solverResult = new SolverResult.SolverResult();
 
 		public TspSolver(IGraph completeGraph) : base(completeGraph)
 		{
@@ -20,7 +19,7 @@ namespace ConsoleApplication.Solver
 
 		    for (var startNode = 0; startNode < CompleteGraph.NodesCount; startNode++)
 		        Solve(tspSolvingAlgorithm, startNode, solverResult);
-		    return _solverResult;
+		    return solverResult;
 		}
 
 	    private ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode, ISolverResult solverResult)

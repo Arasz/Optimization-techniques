@@ -10,7 +10,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
         {
         }
 
-        public override Path Solve(int startNode, IGraph completeGraph, Path precalculatedPath)
+        public override Path Solve(int startNode, IGraph completeGraph, Path precalculatedPath = null)
         {
             var optimizedPath = precalculatedPath;
             var bestMove = FindBestMove(precalculatedPath, completeGraph);
