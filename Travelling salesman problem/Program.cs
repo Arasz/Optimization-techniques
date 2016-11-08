@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Autofac;
 using ConsoleApplication.Similarity;
 
 namespace ConsoleApplication
@@ -17,6 +18,8 @@ namespace ConsoleApplication
 	public class Program
 	{
 		private const int Steps = 50;
+
+	    private static IContainer _dependencyContainer; 
 
 		public static void Main(string[] args)
 		{
@@ -51,11 +54,11 @@ namespace ConsoleApplication
 		    foreach (var similairityValue in similaritySolver.SimilairityValues)
 		    {
 		        var resultString = new StringBuilder();
-		        var title = $"{nameof(SimilaritySolverResult.Cost)} {nameof(SimilaritySolverResult.SimilarityValue)}";
+		        var title = similairityValue.Key;
 		        var filePrinter = new FilePrinter($"{title.Replace(' ','_')}_results.res");
 
-		        resultString.AppendLine(similairityValue.Key);
-		        resultString.AppendLine(title);
+
+		        resultString.AppendLine($"{nameof(SimilaritySolverResult.Cost)} {nameof(SimilaritySolverResult.SimilarityValue)}");
 
 		        foreach (var similaritySolverResult in similairityValue.Value)
 		            resultString.AppendLine($"{similaritySolverResult.Cost} {similaritySolverResult.SimilarityValue:F}");
