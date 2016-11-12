@@ -1,4 +1,5 @@
-﻿using ConsoleApplication.Solver.SolverVisitor;
+﻿using System.Collections.Generic;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Similarity
 {
@@ -7,7 +8,7 @@ namespace ConsoleApplication.Similarity
         /// <summary>
         /// Calculates similarity beetwen paths in path accumulator
         /// </summary>
-        /// <returns>Similarity matrix</returns>
-        double[,] CalculateSimilarityMatrix(IPathAccumulator pathAccumulator);
+        /// <returns>List of paths similarity values</returns>
+        IEnumerable<double> CalculatePathsSimilarities(ISimilarityCalculationStrategy calculationStrategy, ISolverResult solverResult);
     }
 }

@@ -10,36 +10,35 @@ namespace ConsoleApplication.Algorithms.LocalSearch
         {
         }
 
-        public override int Solve(int startNode, IGraph completeGraph, List<int> path)
+        public override Path Solve(int startNode, IGraph completeGraph, Path precalculatedPath = null)
         {
-            while (FindBestMove(path, completeGraph)?.Move(path) ?? false)
-            {
-            }
-            return CalculateCost(path, completeGraph);
+            var optimizedPath = precalculatedPath;
+            var bestMove = FindBestMove(precalculatedPath, completeGraph);
 
+            while (bestMove != null)
+            {
+                optimizedPath = bestMove.Move(optimizedPath);
+                bestMove = FindBestMove(optimizedPath, completeGraph);
+            }
+
+            return optimizedPath;
         }
 
-        protected int CalculateCost(List<int> path, IGraph completeGraph)
+        private static IMoveStrategy FindBestEdgeMove(Path path, IGraph completeGraph)
         {
-            var cost = 0;
-            for (int i = 0; i < path.Count - 1; i++)
-            {
-                cost += completeGraph.Weight(path[i], path[i+1]);
-            }
-            return cost;
-        }
-
-        private IMove FindBestEdgeMove(IList<int> path, IGraph completeGraph)
-        {
-            var bestLocalSearchMove = new EdgeMove();
+            var bestLocalSearchMove = new EdgeMoveStrategy();
 
             for (var i = 0; i < path.Count - 3; i++)
             {
                 for (var j = i + 2; j < path.Count - 1; j++)
                 {
-                    var lineCost = completeGraph.Weight(path[i], path[i + 1]) + completeGraph.Weight(path[j], path[j + 1]);
+                    var lineCost = completeGraph.Weight(path.Nodes[i], path.Nodes[i + 1])
+                                   +
+                                   completeGraph.Weight(path.Nodes[j], path.Nodes[j + 1]);
 
-                    var crossCost = completeGraph.Weight(path[i], path[j]) + completeGraph.Weight(path[i + 1], path[j + 1]);
+                    var crossCost = completeGraph.Weight(path.Nodes[i], path.Nodes[j])
+                                    +
+                                    completeGraph.Weight(path.Nodes[i + 1], path.Nodes[j + 1]);
 
                     var costDifference = crossCost - lineCost;
 
@@ -55,7 +54,7 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             return bestLocalSearchMove;
         }
 
-        protected IMove FindBestMove(IList<int> path, IGraph completeGraph)
+        private static IMoveStrategy FindBestMove(Path path, IGraph completeGraph)
         {
             var bestVertice = FindBestNodeMove(path, completeGraph);
             var bestEdge = FindBestEdgeMove(path, completeGraph);
@@ -66,18 +65,18 @@ namespace ConsoleApplication.Algorithms.LocalSearch
             return bestEdge.CostImprovement < bestVertice.CostImprovement ? bestEdge : bestVertice;
         }
 
-        private static IMove FindBestNodeMove(IList<int> path, IGraph completeGraph)
+        private static IMoveStrategy FindBestNodeMove(Path path, IGraph completeGraph)
         {
-            var bestLocalSearchMove = new NodeMove();
+            var bestLocalSearchMove = new NodeMoveStrategy();
             for (var pathIndex = 0; pathIndex < path.Count - 2; pathIndex++)
             {
-                var previousNode = path[pathIndex];
-                var currentNode = path[pathIndex + 1];
-                var nextNode = path[pathIndex + 2];
+                var previousNode = path.Nodes[pathIndex];
+                var currentNode = path.Nodes[pathIndex + 1];
+                var nextNode = path.Nodes[pathIndex + 2];
 
                 var currentCost = completeGraph.Weight(previousNode, currentNode) + completeGraph.Weight(currentNode, nextNode);
 
-                var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Contains(node)).ToList();
+                var unvisitedNodes = completeGraph.Nodes.Where(node => !path.Nodes.Contains(node)).ToList();
 
                 foreach (var unvisitedNode in unvisitedNodes)
                 {

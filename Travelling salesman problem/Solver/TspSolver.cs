@@ -1,35 +1,47 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
-using System.Collections.Generic;
-using System.Linq;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
 	public class TspSolver : SolverBase
 	{
+
 		public TspSolver(IGraph completeGraph) : base(completeGraph)
 		{
 		}
 
-		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
-			for (var startNode = 0; startNode < _completeGraph.NodesCount; startNode++)
-			{
-				SolveOnce(tspSolvingAlgorithm, pathAccumulator, startNode);
-			}
+		    Statistics = new SolverStatistics();
+            var solverResult = new SolverResult.SolverResult();
+
+
+		    for (var startNode = 0; startNode < CompleteGraph.NodesCount; startNode++)
+		        Solve(tspSolvingAlgorithm, startNode, solverResult);
+		    return solverResult;
 		}
 
-		public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
-		{
-			var path = new List<int>();
-			int localResult;
-			//TODO: pass steps in ctr
-			var context = SolvingTimeContext.Instance;
-			using (context)
-			localResult = tspSolvingAlgorithm.Solve(startNode, _completeGraph, path);
-			UpdateResults(localResult, path, context.Elapsed);
-			pathAccumulator.AddPath(new Path(path.ToList(), localResult));
-		}
+	    private ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode, ISolverResult solverResult)
+	    {
+	        Path bestPath;
+
+	        var context = SolvingTimeContext.Instance;
+	        using (context)
+	        {
+	            bestPath = tspSolvingAlgorithm.Solve(startNode, CompleteGraph);
+	        }
+
+	        Statistics.UpdateSolvingResults(bestPath, context.Elapsed);
+	        solverResult.AddPath(bestPath);
+
+	        return solverResult;
+	    }
+
+	    public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
+	    {
+	        var solverResult = new SolverResult.SolverResult();
+	        return Solve(tspSolvingAlgorithm, startNode, solverResult);
+	    }
 	}
 }

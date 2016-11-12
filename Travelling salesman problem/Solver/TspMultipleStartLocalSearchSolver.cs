@@ -1,17 +1,16 @@
 using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverVisitor;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using static System.Int32;
+using ConsoleApplication.Solver.SolverResult;
 
 namespace ConsoleApplication.Solver
 {
 	public class TspMultipleStartLocalSearchSolver : SolverBase
 	{
-		private readonly IAlgorithm _initializationAlgorithm;
-		private readonly ISolver _initializationSolver;
+		private readonly IAlgorithm _internalAlgorithm;
+		private readonly ISolver _internalSolver;
 
 	    private const int InsideAlgorithmRepeatAmount = 1000;
 
@@ -19,54 +18,45 @@ namespace ConsoleApplication.Solver
 
 	    private readonly Random _randomGenerator;
 
-		public TspMultipleStartLocalSearchSolver(IGraph completeGraph, ISolver initializationSolver, IAlgorithm initializationAlgorithm) : base(completeGraph)
+		public TspMultipleStartLocalSearchSolver(IGraph completeGraph, ISolver internalSolver,
+		    IAlgorithm internalAlgorithm) : base(completeGraph)
 		{
-			_initializationSolver = initializationSolver;
-			_initializationAlgorithm = initializationAlgorithm;
+			_internalSolver = internalSolver;
+			_internalAlgorithm = internalAlgorithm;
             _randomGenerator = new Random();
 		}
 
-		public override void Solve(IAlgorithm tspSolvingAlgorithm)
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
-			var context = SolvingTimeContext.Instance;  
+			var context = SolvingTimeContext.Instance;
+		    Statistics = new SolverStatistics();
+		    var resultAccumulator = new SolverResult.SolverResult();
 
-			var bestResult = MaxValue;
-			var bestPath = new List<int>();
+
+			var bestPath = new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));
+
 			for(var i=0; i<MslsRepeatAmount; i++)
 			{
 				using(context)
 				{
 					for(var j=0; j<InsideAlgorithmRepeatAmount; j++)
 			    	{
-						var pathAccumulator = new PathAccumulator();
-						var startNode = _randomGenerator.Next(0, _completeGraph.NodesCount-1);
+						var startNode = _randomGenerator.Next(0, CompleteGraph.NodesCount-1);
 
-                		_initializationSolver.SolveOnce(_initializationAlgorithm, pathAccumulator, startNode);
+				        var pathAccumulator = _internalSolver.Solve(_internalAlgorithm, startNode);
 
-						var accumulatedPath = pathAccumulator.Paths[0];
-				    	var localPath = accumulatedPath.NodesList;
-						var localResult = tspSolvingAlgorithm.Solve(localPath.First(), _completeGraph, localPath);
+						var localPath = pathAccumulator.Paths[0];
 
-				        if(localResult < bestResult)
-						{
-							bestResult = localResult;
-							bestPath = localPath;
-						}
-			    	}
-					UpdatePathResults(bestResult, bestPath);
-					UpdateTimeMeasures(context.Elapsed);
+						localPath = tspSolvingAlgorithm.Solve(localPath.Nodes.First(), CompleteGraph, localPath);
+
+				        if (localPath.Cost < bestPath.Cost)
+				            bestPath = localPath;
+				    }
+					Statistics.UpdateSolvingResults(bestPath, context.Elapsed);
+				    resultAccumulator.AddPath(bestPath);
 				}
 			}
+		    return resultAccumulator;
 		}
-
-		public override void Solve(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator)
-		{
-			throw new NotImplementedException();
-		}
-
-        public override void SolveOnce(IAlgorithm tspSolvingAlgorithm, IPathAccumulator pathAccumulator, int startNode)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

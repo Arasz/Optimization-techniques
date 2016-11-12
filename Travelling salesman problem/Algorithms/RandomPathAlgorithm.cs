@@ -7,40 +7,35 @@ namespace ConsoleApplication.Algorithms
 {
 	public class RandomPathAlgorithm : AlgorithmBase
 	{
-        private Random _randomGenerator;
+        private readonly Random _randomGenerator;
+
 		public RandomPathAlgorithm (int steps, IEdgeFinder edgeFinder) : base(steps, edgeFinder)
 		{
             _randomGenerator = new Random();
 		}
 
-		public override int Solve(int startNode, IGraph completeGraph, List<int> path)
-		{
-            
-        	var iterator = completeGraph.Iterator;
-			var pathCost = 0;
+	    public override Path Solve(int startNode, IGraph completeGraph, Path precalculatedPath = null)
+	    {
+	        var iterator = completeGraph.Iterator;
 
-			path.Add(startNode);
-			var unvisitedNodes = completeGraph.Nodes.Where(node => node != startNode).ToList();
-			var steps = _steps;
+	        var nodes = new List<int>(startNode);
 
-			while (--steps > 0)
-			{
-				var edgeToNearestNode = _edgeFinder.RandomNodeEdge(iterator.Edges, unvisitedNodes, _randomGenerator);
+	        var unvisitedNodes = completeGraph.Nodes.Where(node => node != startNode).ToList();
+	        var steps = _steps;
 
-				pathCost += edgeToNearestNode.Weight;
+	        while (--steps > 0)
+	        {
+	            var edgeToNearestNode = _edgeFinder.RandomNodeEdge(iterator.Edges, unvisitedNodes, _randomGenerator);
 
-				iterator.MoveAlongEdge(edgeToNearestNode);
+	            iterator.MoveAlongEdge(edgeToNearestNode);
 
-				unvisitedNodes.Remove(iterator.CurrentNode);
+	            unvisitedNodes.Remove(iterator.CurrentNode);
 
-				path.Add(iterator.CurrentNode);
-			}
+	            nodes.Add(iterator.CurrentNode);
+	        }
+	        nodes.Add(startNode);
 
-			pathCost += iterator.EdgeWeight(startNode);
-			path.Add(startNode);
-
-			return pathCost;
-		}
-                                
+	        return new Path(nodes, new DefaultCostCalculationStrategy(completeGraph));
+	    }
 	}
 }

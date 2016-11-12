@@ -14,6 +14,6 @@ namespace ConsoleApplication.Algorithms
 			_edgeFinder = edgeFinder;
 		}
 
-		public abstract int Solve(int startNode, IGraph completeGraph, List<int> path);
+	    public abstract Path Solve(int startNode, IGraph completeGraph, Path precalculatedPath = null);
 	}
 }

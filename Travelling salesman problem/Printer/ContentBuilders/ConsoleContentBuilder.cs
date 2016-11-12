@@ -7,11 +7,11 @@ namespace ConsoleApplication.Printer.ContentBuilders
 {
 	public class ConsoleContentBuilder : IContentBuilder
 	{
-		private readonly ISolver _solver;
+	    private readonly ISolverStatistics _solverStatistics;
 
-		public ConsoleContentBuilder(ISolver solver)
+		public ConsoleContentBuilder(ISolverStatistics solverStatistics)
 		{
-			_solver = solver;
+		    _solverStatistics = solverStatistics;
 		}
 
 		public string BuildContent(string title)
@@ -19,14 +19,14 @@ namespace ConsoleApplication.Printer.ContentBuilders
 			var builder = new StringBuilder();
 			builder.AppendLine("".PadRight(30, '*'));
 			builder.AppendLine(title + $"\tDate: {DateTime.Now}");
-			builder.AppendLine($"Min solving time: {_solver.MinSolvingTime.TotalMilliseconds} ms, " +
-							   $"Mean solving time: {_solver.MeanSolvingTime.TotalMilliseconds} ms, " +
-							   $"Max solving time: {_solver.MaxSolvingTime.TotalMilliseconds} ms , ");
-			builder.AppendLine($"Min cost: {_solver.BestResult}, Mean cost: {_solver.MeanReasult}," +
-							   $" Max cost: {_solver.WorstResult}");
-			builder.AppendLine($"Elements in path: {_solver.BestPath.Count()}");
+			builder.AppendLine($"Min solving time: {_solverStatistics.MinSolvingTime.TotalMilliseconds} ms, " +
+							   $"Mean solving time: {_solverStatistics.MeanSolvingTime.TotalMilliseconds} ms, " +
+							   $"Max solving time: {_solverStatistics.MaxSolvingTime.TotalMilliseconds} ms , ");
+			builder.AppendLine($"Min cost: {_solverStatistics.BestPath.Cost}, Mean cost: {_solverStatistics.MeanCost}," +
+							   $" Max cost: {_solverStatistics.WorstCost}");
+			builder.AppendLine($"Elements in path: {_solverStatistics.BestPath.Count}");
 			builder.AppendLine("Path:");
-			foreach (var node in _solver.BestPath)
+			foreach (var node in _solverStatistics.BestPath.Nodes)
 				builder.Append($"{node}, ");
 			builder.Remove(builder.Length - 2, 1);
 			builder.AppendLine();

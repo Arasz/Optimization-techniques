@@ -10,66 +10,16 @@ namespace ConsoleApplication.Algorithms
 		{
 		}
 
-		public override int Solve(int startNode, IGraph completeGraph, List<int> path)
+		private static Result FindBestResult(int firstNode, int secondNode, IEnumerable<int> unvisitedNodes, IGraph graph)
 		{
-			var iterator = completeGraph.Iterator;
-
-			if (_steps < 1)
-				return 0;
-			iterator.MoveTo(startNode);
-			var pathCost = 0;
-
-			path.Add(startNode);
-			var unvisitedNodes = completeGraph.Nodes.Where(node => node != startNode).ToList();
-			var steps = _steps;
-
-			//find nearest to start point
-			var nearestNodeEdge = _edgeFinder.NearestNodeEdge(iterator.Edges, unvisitedNodes);
-			pathCost += nearestNodeEdge.Weight;
-
-			iterator.MoveAlongEdge(nearestNodeEdge);
-			unvisitedNodes.Remove(iterator.CurrentNode);
-			path.Add(iterator.CurrentNode);
-			iterator.MoveTo(path.Last());
-			path.Add(startNode);
-			pathCost += iterator.EdgeWeight(startNode);
-
-			steps--;
-
-			while (--steps > 0)
-			{
-				Result bestResult = new Result();
-				for (var node = 0; node < (path.Count - 2); node++)
-				{
-					var localBestResult = getBestResult(path[node], path[node + 1], unvisitedNodes, completeGraph);
-					if (bestResult.Cost < 0 || localBestResult.Cost < bestResult.Cost)
-					{
-						bestResult = localBestResult;
-						bestResult.FollowingNode = node + 1;
-					}
-				}
-				var previousNode = path[bestResult.FollowingNode - 1];
-				var followingNode = path[bestResult.FollowingNode];
-
-				path.Insert(bestResult.FollowingNode, bestResult.BestNode);
-
-				pathCost -= completeGraph.Weight(previousNode, followingNode);
-				pathCost += completeGraph.Weight(previousNode, bestResult.BestNode) + completeGraph.Weight(bestResult.BestNode, followingNode);
-
-				unvisitedNodes.Remove(bestResult.BestNode);
-			}
-			return pathCost;
-		}
-
-		private Result getBestResult(int firstNode, int secondNode, List<int> unvisitedNodes, IGraph graph)
-		{
-			Result result = new Result();
+			var result = new Result();
 
 			foreach (var unvisitedNode in unvisitedNodes)
 			{
 				var previousCost = graph.Weight(firstNode, secondNode);
 				var cost = graph.Weight(firstNode, unvisitedNode) + graph.Weight(unvisitedNode, secondNode);
 				var costDifference = cost - previousCost;
+
 				if (result.Cost < 0 || costDifference < result.Cost)
 				{
 					result.Cost = costDifference;
@@ -78,6 +28,51 @@ namespace ConsoleApplication.Algorithms
 			}
 			return result;
 		}
+
+	    public override Path Solve(int startNode, IGraph completeGraph, Path precalculatedPath = null)
+	    {
+	        var iterator = completeGraph.Iterator;
+	        var pathNodes = new List<int>();
+
+
+	        iterator.MoveTo(startNode);
+
+	        pathNodes.Add(startNode);
+	        var unvisitedNodes = completeGraph.Nodes.Where(node => node != startNode).ToList();
+	        var steps = _steps;
+
+	        //find nearest to start point
+	        var nearestNodeEdge = _edgeFinder.NearestNodeEdge(iterator.Edges, unvisitedNodes);
+
+	        iterator.MoveAlongEdge(nearestNodeEdge);
+	        unvisitedNodes.Remove(iterator.CurrentNode);
+	        pathNodes.Add(iterator.CurrentNode);
+	        iterator.MoveTo(pathNodes.Last());
+	        pathNodes.Add(startNode);
+
+	        steps--;
+
+	        while (--steps > 0)
+	        {
+	            var bestResult = new Result();
+	            for (var node = 0; node < (pathNodes.Count - 2); node++)
+	            {
+	                var localBestResult = FindBestResult(pathNodes[node], pathNodes[node + 1], unvisitedNodes, completeGraph);
+
+	                if (bestResult.Cost < 0 || localBestResult.Cost < bestResult.Cost)
+	                {
+	                    bestResult = localBestResult;
+	                    bestResult.FollowingNode = node + 1;
+	                }
+	            }
+
+	            pathNodes.Insert(bestResult.FollowingNode, bestResult.BestNode);
+
+	            unvisitedNodes.Remove(bestResult.BestNode);
+	        }
+	        return new Path(pathNodes, new DefaultCostCalculationStrategy(completeGraph));
+
+	    }
 	}
 
 	internal class Result
