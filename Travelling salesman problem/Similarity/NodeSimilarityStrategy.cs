@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ConsoleApplication.Graphs;
 
 namespace ConsoleApplication.Similarity
@@ -9,6 +10,13 @@ namespace ConsoleApplication.Similarity
         {
             return first.Nodes
                 .Count(node => second.Nodes.Contains(node));
+        }
+
+        public IEnumerable<Fragment> FindSimilarFragments(Path first, Path second)
+        {
+            return first.Nodes
+                .Where(node => second.Nodes.Contains(node))
+                .Select(node => new Fragment(node));
         }
     }
 }

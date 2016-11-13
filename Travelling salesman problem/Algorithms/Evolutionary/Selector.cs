@@ -9,11 +9,11 @@ namespace ConsoleApplication.Algorithms.Evolutionary
 	{
 		private Random Random { get; } = new Random();
 
-		/// <exception cref="ArgumentException"> FUCK YOU! </exception>
+		/// <exception cref="ArgumentException">"Population must conatin at least two individuals"</exception>
 		public Tuple<Path, Path> Select(ICollection<Path> population)
 		{
 			if (population.Count < 2)
-				throw new ArgumentException("FUCK YOU!");
+				throw new ArgumentException("Population must conatin at least two individuals");
 
 			var indexList = new HashSet<int>();
 			while (indexList.Count < 2)
