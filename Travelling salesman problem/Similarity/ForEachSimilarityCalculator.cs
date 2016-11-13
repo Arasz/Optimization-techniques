@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Similarity
 {

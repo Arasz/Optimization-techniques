@@ -1,7 +1,7 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
 using System.Linq;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Solver
 {
@@ -12,7 +12,7 @@ namespace ConsoleApplication.Solver
 		{
 		    Statistics = new SolverStatistics();
 
-		    var newAccumulator = new SolverResult.SolverResult();
+		    var newAccumulator = new SolverResult();
 
 			foreach (var path in solverResult.Paths)
 			{

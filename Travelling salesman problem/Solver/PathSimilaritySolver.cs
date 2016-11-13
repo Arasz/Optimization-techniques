@@ -4,7 +4,7 @@ using System.Linq;
 using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
 using ConsoleApplication.Similarity;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Solver
 {
@@ -31,7 +31,7 @@ namespace ConsoleApplication.Solver
         public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
         {
             var bestPath = InitialBestPath;
-            ISolverResult solverResult = new SolverResult.SolverResult();
+            var solverResult = new SolverResult();
 
             for (var j = 0; j < _generatedPaths; j++)
             {

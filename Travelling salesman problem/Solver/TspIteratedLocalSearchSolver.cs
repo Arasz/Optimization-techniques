@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Diagnostics;
 using ConsoleApplication.Algorithms.LocalSearch;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Solver
 {
@@ -32,7 +32,7 @@ namespace ConsoleApplication.Solver
 		{
 			var context = SolvingTimeContext.Instance;
 		    Statistics = new SolverStatistics();
-		    var resultPathAccumulator = new SolverResult.SolverResult();
+		    var resultPathAccumulator = new SolverResult();
 
 		    for(var i=0; i<IlsRepeatAmount; i++)
 			{

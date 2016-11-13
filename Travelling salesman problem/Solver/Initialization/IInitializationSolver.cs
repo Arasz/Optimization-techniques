@@ -1,4 +1,6 @@
-﻿using ConsoleApplication.Solver.SolverResult;
+﻿
+
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Solver
 {

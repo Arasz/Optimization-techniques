@@ -3,7 +3,7 @@ using ConsoleApplication.Graphs;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Solver
 {
@@ -30,7 +30,7 @@ namespace ConsoleApplication.Solver
 		{
 			var context = SolvingTimeContext.Instance;
 		    Statistics = new SolverStatistics();
-		    var resultAccumulator = new SolverResult.SolverResult();
+		    var resultAccumulator = new SolverResult();
 
 
 			var bestPath = new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));

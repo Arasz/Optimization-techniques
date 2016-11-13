@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Similarity
 {

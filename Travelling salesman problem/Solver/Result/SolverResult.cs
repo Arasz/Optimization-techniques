@@ -6,7 +6,7 @@ namespace ConsoleApplication.Solver.Result
 {
 	public class SolverResult : ISolverResult
 	{
-		public IList<Path> Paths { get; };
+		public IList<Path> Paths { get; }
 
 		public SolverResult()
 		{

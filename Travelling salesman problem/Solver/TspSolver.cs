@@ -1,6 +1,6 @@
 ﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.SolverResult;
+using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Solver
 {
@@ -14,7 +14,7 @@ namespace ConsoleApplication.Solver
 		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm)
 		{
 		    Statistics = new SolverStatistics();
-            var solverResult = new SolverResult.SolverResult();
+            var solverResult = new SolverResult();
 
 
 		    for (var startNode = 0; startNode < CompleteGraph.NodesCount; startNode++)
@@ -40,7 +40,7 @@ namespace ConsoleApplication.Solver
 
 	    public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, int startNode)
 	    {
-	        var solverResult = new SolverResult.SolverResult();
+	        var solverResult = new SolverResult();
 	        return Solve(tspSolvingAlgorithm, startNode, solverResult);
 	    }
 	}
