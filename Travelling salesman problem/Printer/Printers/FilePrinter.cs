@@ -4,18 +4,19 @@ namespace ConsoleApplication.Printer
 {
     public class FilePrinter : IPrinter
     {
-        private FileInfo file;
+        private readonly FileInfo _file;
 
-        public FilePrinter(string fileName)
+        public FilePrinter(string directory, string fileName)
         {
-            file = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), fileName));
-            if(file.Exists)
-                file.Delete();
+            _file = new FileInfo(Path.Combine(string.IsNullOrEmpty(directory) ?
+                Directory.GetCurrentDirectory() : directory, fileName));
+            if(_file.Exists)
+                _file.Delete();
         }
 
         public void Print(string content)
         {
-            using (var stream = file.Open(FileMode.OpenOrCreate | FileMode.Append, FileAccess.Write))
+            using (var stream = _file.Open(FileMode.OpenOrCreate | FileMode.Append, FileAccess.Write))
             using (var fileWriter = new StreamWriter(stream))
             {
                 fileWriter.Write(content);
