@@ -1,4 +1,5 @@
-﻿using ConsoleApplication.Algorithms;
+﻿using System;
+using ConsoleApplication.Algorithms;
 using ConsoleApplication.Algorithms.Evolutionary;
 using ConsoleApplication.Graphs;
 using ConsoleApplication.Solver.Result;
@@ -10,19 +11,22 @@ namespace ConsoleApplication.Solver
 {
 	public class EvolutionarySolver : SolverBase
 	{
-		private readonly IAlgorithm _optimizationAlgorithm;
 		private readonly IRecombinator _recombinator;
 		private readonly ISelector _selector;
-		private Stopwatch _stopwatch;
+	    private readonly int _solvingTime;
+	    private readonly Stopwatch _stopwatch;
+	    private readonly Random _random;
 
-		private int StartNode => 0;
+		private int StartNode(Path path) => path.Nodes[_random.Next(0,path.Nodes.Count)];
 
-		public EvolutionarySolver(IGraph completeGraph, IRecombinator recombinator, ISelector selector, IAlgorithm optimizationAlgorithm) : base(completeGraph)
+		public EvolutionarySolver(IGraph completeGraph, IRecombinator recombinator, ISelector selector, int solvingTime = 1000)
+		    : base(completeGraph)
 		{
 			_recombinator = recombinator;
 			_selector = selector;
-			_optimizationAlgorithm = optimizationAlgorithm;
-			_stopwatch = new Stopwatch();
+		    _solvingTime = solvingTime;
+		    _stopwatch = new Stopwatch();
+		    _random = new Random();
 		}
 
 		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
@@ -33,11 +37,11 @@ namespace ConsoleApplication.Solver
 
 			_stopwatch.Start();
 
-			while (_stopwatch.ElapsedMilliseconds < 1000)
+			while (_stopwatch.ElapsedMilliseconds < _solvingTime)
 			{
 				var parents = _selector.Select(initialPopulation);
 				var child = _recombinator.Recombine(parents.Item1, parents.Item2);
-				var optimalChild = _optimizationAlgorithm.Solve(StartNode, CompleteGraph, child);
+				var optimalChild = tspSolvingAlgorithm.Solve(StartNode(child), CompleteGraph, child);
 				initialPopulation = EnhancePopulation(optimalChild, initialPopulation);
 
 				//TODO: Statystyki

@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Text;
 using Autofac;
+using ConsoleApplication.Algorithms.Evolutionary;
 using ConsoleApplication.Similarity;
 
 namespace ConsoleApplication
@@ -45,11 +46,25 @@ namespace ConsoleApplication
             var calculationStrategies = new ISimilarityCalculationStrategy[]
                 {new EdgeSimillarityStrategy(), new NodeSimilarityStrategy()};
 
+            var simpleSolver = new TspSolver(graph);
+            var edgeFinder = new EdgeFinder();
+
+            var evolutinarySolver = new EvolutionarySolver(graph,
+                new Recombinator(new SimilarityFinder(calculationStrategies), Steps ),
+                new Selector());
+            var localSearch = new LocalSearchAlgorithm(Steps, edgeFinder);
+
+            var generatedPaths = simpleSolver.Solve(new RandomPathAlgorithm(Steps, edgeFinder));
+
+            evolutinarySolver.Solve(localSearch, generatedPaths);
+
+            Console.WriteLine("Evolutionary solver ended his work!");
+
             var similaritySolver = new PathSimilaritySolver(graph,
-                new InitializationSolver(new TspSolver(graph), new RandomPathAlgorithm(Steps, new EdgeFinder())),
+                new InitializationSolver(new TspSolver(graph), new RandomPathAlgorithm(Steps, edgeFinder)),
                 calculationStrategies);
 
-            similaritySolver.Solve(new LocalSearchAlgorithm(Steps, new EdgeFinder()));
+            similaritySolver.Solve(new LocalSearchAlgorithm(Steps, edgeFinder));
 
 
 
