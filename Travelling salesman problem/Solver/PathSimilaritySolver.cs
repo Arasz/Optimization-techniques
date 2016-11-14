@@ -1,26 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ConsoleApplication.Algorithms;
+﻿using ConsoleApplication.Algorithms;
 using ConsoleApplication.Graphs;
 using ConsoleApplication.Similarity;
-using ConsoleApplication.Solver.Result;
+using ConsoleApplication.Solver.Results;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleApplication.Solver
 {
+    public struct SimilaritySolverResult
+    {
+        public int Cost { get; }
+
+        public double SimilarityValue { get; }
+
+        public SimilaritySolverResult(double similarityValue, int cost)
+        {
+            SimilarityValue = similarityValue;
+            Cost = cost;
+        }
+
+        public override string ToString() => $"S: {SimilarityValue} | C: {Cost}";
+    }
+
     public class PathSimilaritySolver : SolverBase
     {
-        private readonly IInitializationSolver _initializationSolver;
         private readonly IEnumerable<ISimilarityCalculationStrategy> _calculatedSimilarities;
         private readonly int _generatedPaths;
+        private readonly IInitializationSolver _initializationSolver;
         private readonly Random _randomGenerator;
 
+        public Dictionary<string, IList<SimilaritySolverResult>> SimilairityValues { get; } =
+            new Dictionary<string, IList<SimilaritySolverResult>>();
 
-        public Dictionary<string, IList<SimilaritySolverResult>> SimilairityValues{ get; } =
-            new Dictionary<string ,IList<SimilaritySolverResult>>();
+        private static Path InitialBestPath => new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue));
+
+        private int StartNode => _randomGenerator.Next(0, CompleteGraph.NodesCount - 1);
 
         public PathSimilaritySolver(IGraph completeGraph, IInitializationSolver initializationSolver,
-            IEnumerable<ISimilarityCalculationStrategy> calculatedSimilarities, int generatedPaths = 1000) : base(completeGraph)
+                            IEnumerable<ISimilarityCalculationStrategy> calculatedSimilarities, int generatedPaths = 1000) : base(completeGraph)
         {
             _initializationSolver = initializationSolver;
             _calculatedSimilarities = calculatedSimilarities;
@@ -53,8 +71,6 @@ namespace ConsoleApplication.Solver
             return solverResult;
         }
 
-        private static Path InitialBestPath => new Path(new List<int>(), new ConstCostCalculationStrategy(int.MaxValue) );
-
         private void CalculateSimilarities(ISolverResult solverResult, ISimilarityCalculator similarityCalculator)
         {
             foreach (var strategy in _calculatedSimilarities)
@@ -65,22 +81,5 @@ namespace ConsoleApplication.Solver
                     .ToList();
             }
         }
-
-        private int StartNode => _randomGenerator.Next(0, CompleteGraph.NodesCount - 1);
-    }
-
-    public struct SimilaritySolverResult
-    {
-        public SimilaritySolverResult(double similarityValue, int cost)
-        {
-            SimilarityValue = similarityValue;
-            Cost = cost;
-        }
-
-        public double SimilarityValue { get; }
-
-        public int Cost { get; }
-
-        public override string ToString() => $"S: {SimilarityValue} | C: {Cost}";
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace ConsoleApplication.SolverRunner
 {
-    public class TspProblemSolverRunner: ISolverRunner
+    public class TspProblemSolverRunner : ISolverRunner
     {
         public void Run()
         {

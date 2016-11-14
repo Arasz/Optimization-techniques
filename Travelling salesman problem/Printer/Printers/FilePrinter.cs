@@ -10,7 +10,7 @@ namespace ConsoleApplication.Printer
         {
             _file = new FileInfo(Path.Combine(string.IsNullOrEmpty(directory) ?
                 Directory.GetCurrentDirectory() : directory, fileName));
-            if(_file.Exists)
+            if (_file.Exists)
                 _file.Delete();
         }
 

@@ -2,15 +2,15 @@ using ConsoleApplication.Graphs;
 
 namespace ConsoleApplication.Algorithms.LocalSearch
 {
-     internal class NodeMoveStrategy : IMoveStrategy
+    internal class NodeMoveStrategy : IMoveStrategy
     {
         public int CostImprovement { get; set; }
 
         public int ExcludedNodePathIndex { get; set; }
 
-        private int ExcludedNodeValue { get; set; }
-
         public int NodeAfterMove { get; set; }
+
+        private int ExcludedNodeValue { get; set; }
 
         public Path Move(Path path)
         {

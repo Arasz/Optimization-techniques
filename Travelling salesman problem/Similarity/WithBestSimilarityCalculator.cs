@@ -1,8 +1,7 @@
-﻿
+﻿using ConsoleApplication.Graphs;
+using ConsoleApplication.Solver.Results;
 using System.Collections.Generic;
 using System.Linq;
-using ConsoleApplication.Graphs;
-using ConsoleApplication.Solver.Result;
 
 namespace ConsoleApplication.Similarity
 {

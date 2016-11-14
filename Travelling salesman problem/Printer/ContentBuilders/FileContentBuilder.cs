@@ -1,4 +1,4 @@
-﻿using ConsoleApplication.Solver;
+﻿using ConsoleApplication.Solver.Statistics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,8 +9,8 @@ namespace ConsoleApplication.Printer.ContentBuilders
 {
     public class FileContentBuilder : IContentBuilder
     {
-        private readonly ISolverStatistics _solverStatistics;
         private readonly FileInfo _coordinateFile;
+        private readonly ISolverStatistics _solverStatistics;
 
         public FileContentBuilder(ISolverStatistics solverStatistics, string coordinateFilePath)
         {

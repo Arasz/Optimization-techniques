@@ -1,12 +1,12 @@
 ﻿using ConsoleApplication.Algorithms;
-using ConsoleApplication.Solver.Result;
+using ConsoleApplication.Solver.Results;
 
 namespace ConsoleApplication.Solver
 {
     public class InitializationSolver : IInitializationSolver
     {
-        private readonly ISolver _solver;
         private readonly IAlgorithm _algorithm;
+        private readonly ISolver _solver;
 
         public InitializationSolver(ISolver solver, IAlgorithm algorithm)
         {

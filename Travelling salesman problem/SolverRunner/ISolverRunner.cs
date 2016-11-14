@@ -1,7 +1,7 @@
 ﻿namespace ConsoleApplication.SolverRunner
 {
     /// <summary>
-    /// Runs solvers
+    /// Runs solvers 
     /// </summary>
     public interface ISolverRunner
     {

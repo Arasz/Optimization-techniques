@@ -5,7 +5,8 @@
     "emitEntryPoint": true
   },
   "runtimes": {
-    "win10-x64": {}
+    "win10-x64": {},
+    "osx": {}
   },
   "dependencies": {
     "Autofac": "4.2.0",

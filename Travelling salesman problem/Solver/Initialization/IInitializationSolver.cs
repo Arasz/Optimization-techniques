@@ -1,13 +1,11 @@
-﻿
-
-using ConsoleApplication.Solver.Result;
+﻿using ConsoleApplication.Solver.Results;
 
 namespace ConsoleApplication.Solver
 {
     public interface IInitializationSolver
     {
         /// <summary>
-        /// Solves TSP starting from given node.
+        /// Solves TSP starting from given node. 
         /// </summary>
         /// <returns></returns>
         ISolverResult Solve(int startNode);

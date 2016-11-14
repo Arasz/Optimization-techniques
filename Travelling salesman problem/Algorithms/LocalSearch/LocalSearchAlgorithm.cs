@@ -1,5 +1,4 @@
 ﻿using ConsoleApplication.Graphs;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ConsoleApplication.Algorithms.LocalSearch

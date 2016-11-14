@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ConsoleApplication.Graphs;
+using System.Collections.Generic;
 using System.Linq;
-using ConsoleApplication.Graphs;
 
 namespace ConsoleApplication.Similarity
 {
