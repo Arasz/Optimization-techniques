@@ -10,68 +10,68 @@ using System.Linq;
 
 namespace ConsoleApplication.Solver
 {
-    public class EvolutionarySolver : SolverBase
-    {
-        private readonly Random _random;
-        private readonly IRecombinator _recombinator;
-        private readonly ISelector _selector;
-        private readonly Stopwatch _solverStopwatch;
-        private readonly int _solvingTime;
+	public class EvolutionarySolver : SolverBase
+	{
+		private readonly Random _random;
+		private readonly IRecombinator _recombinator;
+		private readonly ISelector _selector;
+		private readonly Stopwatch _solverStopwatch;
+		private readonly int _solvingTime;
 
-        public EvolutionarySolver(IGraph completeGraph, IRecombinator recombinator, ISelector selector, int solvingTime = 1000)
-            : base(completeGraph)
-        {
-            _recombinator = recombinator;
-            _selector = selector;
-            _solvingTime = solvingTime;
-            _solverStopwatch = new Stopwatch();
-            _random = new Random();
-        }
+		public EvolutionarySolver(IGraph completeGraph, IRecombinator recombinator, ISelector selector, int solvingTime = 41000)
+			: base(completeGraph)
+		{
+			_recombinator = recombinator;
+			_selector = selector;
+			_solvingTime = solvingTime;
+			_solverStopwatch = new Stopwatch();
+			_random = new Random();
+		}
 
-        public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
-        {
-            Statistics = new BasicSolverStatistics();
+		public override ISolverResult Solve(IAlgorithm tspSolvingAlgorithm, ISolverResult solverResult)
+		{
+			Statistics = new BasicSolverStatistics();
 
-            ISet<Path> initialPopulation = new HashSet<Path>(solverResult.Paths);
+			ISet<Path> initialPopulation = new HashSet<Path>(solverResult.Paths);
 
-            var optimalChilderens = new SolverResult();
+			var optimalChilderens = new SolverResult();
 
-            _solverStopwatch.Start();
-            var localSearchSolveTime = SolvingTimeContext.Instance;
+			_solverStopwatch.Start();
+			var localStopwatch = new Stopwatch();
 
-            while (_solverStopwatch.ElapsedMilliseconds < _solvingTime)
-            {
-                var parents = _selector.Select(initialPopulation);
-                var child = _recombinator.Recombine(parents.Item1, parents.Item2);
+			while (_solverStopwatch.ElapsedMilliseconds < _solvingTime)
+			{
+				var parents = _selector.Select(initialPopulation);
+				var child = _recombinator.Recombine(parents.Item1, parents.Item2);
 
-                Path optimalChild;
-                using (localSearchSolveTime)
-                {
-                    optimalChild = tspSolvingAlgorithm.Solve(StartNode(child), CompleteGraph, child);
-                }
+				localStopwatch.Start();
+				var optimalChild = tspSolvingAlgorithm.Solve(StartNode(child), CompleteGraph, child);
+				localStopwatch.Stop();
 
-                optimalChilderens.AddPath(optimalChild);
-                initialPopulation = EnhancePopulation(optimalChild, initialPopulation);
+				optimalChilderens.AddPath(optimalChild);
+				initialPopulation = EnhancePopulation(optimalChild, initialPopulation);
 
-                Statistics.UpdateSolvingResults(optimalChild, localSearchSolveTime.Elapsed);
-            }
+				Statistics.UpdateSolvingResults(optimalChild, localStopwatch.Elapsed);
+				localStopwatch.Reset();
+			}
 
-            return optimalChilderens;
-        }
+			_solverStopwatch.Reset();
+			return optimalChilderens;
+		}
 
-        private static ISet<Path> EnhancePopulation(Path optimalChild, ISet<Path> population)
-        {
-            var worstIndividual = population.OrderByDescending(path => path.Cost).Last();
+		private static ISet<Path> EnhancePopulation(Path optimalChild, ISet<Path> population)
+		{
+			var worstIndividual = population.OrderByDescending(path => path.Cost).First();
 
-            if (worstIndividual.Cost > optimalChild.Cost)
-            {
-                population.Remove(worstIndividual);
-                population.Add(optimalChild);
-            }
+			if (worstIndividual.Cost > optimalChild.Cost)
+			{
+				population.Remove(worstIndividual);
+				population.Add(optimalChild);
+			}
 
-            return population;
-        }
+			return population;
+		}
 
-        private int StartNode(Path path) => path.Nodes[_random.Next(0, path.Nodes.Count)];
-    }
+		private int StartNode(Path path) => path.Nodes[_random.Next(0, path.Nodes.Count)];
+	}
 }
