@@ -1,6 +1,6 @@
-Best cost: 8799
-Mean cost: 9204
-Worst cost: 9371
-Best time: 00:00:00.0430000
-Mean time: 00:00:00.0440000
-Worst cost: 00:00:00.0450000
+Best cost: 8771
+Mean cost: 9221
+Worst cost: 9363
+Best time: 00:00:00.0400000
+Mean time: 00:00:00.0420000
+Worst cost: 00:00:00.0440000

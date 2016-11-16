@@ -59,7 +59,22 @@ Celem ćwiczenia było dziesięciokrotne uruchomienie hybrydowego algorytmu ewol
 \label{Rys. Node}
 \end{figure}
 
-Statystyki otrzymano po wykonaniu 10 powtórzeń algorytmu ewolucyjnego, gdzie każde trwało 11 sekund (średni czas dla 10 uruchomień algorytmu GRASP+MLMS)
+
+\begin{table}[H]
+\centering
+\caption{Statystyki otrzymane z 10 powtórzeń algorytmu ewolucyjnego oraz NNG + MSLS}
+\label{my-label}
+\begin{tabular}{|l|c|c|}
+\hline
+                    & \multicolumn{1}{l|}{\textbf{Evolutionary}} & \multicolumn{1}{l|}{\textbf{NNG + MSLS}} \\ \hline
+\textbf{Best cost}  & 8771                                       & 9510                                     \\ \hline
+\textbf{Mean cost}  & 9221                                       & 9525                                     \\ \hline
+\textbf{Worst cost} & 9363                                       & 9664                                     \\ \hline
+\textbf{Best time}  & 41.1s                                      & 36.4s                                    \\ \hline
+\textbf{Mean  time} & 41.1s                                      & 41.1s                                    \\ \hline
+\textbf{Worst time} & 41.1s                                      & 46.2s                                    \\ \hline
+\end{tabular}
+\end{table}
 
 \end{document}
 \\
